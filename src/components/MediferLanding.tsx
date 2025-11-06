@@ -788,7 +788,7 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
           <div className="grid md:grid-cols-3 gap-6 text-white/90">
             <Badge index={0}>{t("uni_badge_ca")}</Badge>
             <Badge index={1}>{t("uni_badge_sa")}</Badge>
-            <Badge index={2}>{t("uni_badge_eu")}</Badge>
+            
           </div>
         </RevealBlock>
 
