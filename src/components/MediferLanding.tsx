@@ -90,10 +90,9 @@ const T: Record<Lang, Record<string, string>> = {
 
     uni_k_cov: "Alcance",
     uni_t_cov: "Cobertura global",
-    uni_l_cov: "Centro y Suramérica con conexiones a Europa.",
+    uni_l_cov: "Centro y Suramérica.",
     uni_badge_ca: "Centroamérica",
     uni_badge_sa: "Suramérica",
-    uni_badge_eu: "Europa (conexiones)",
 
     // Lightbox
     lb_close: "Cerrar",
@@ -157,10 +156,10 @@ const T: Record<Lang, Record<string, string>> = {
 
     uni_k_cov: "Reach",
     uni_t_cov: "Global coverage",
-    uni_l_cov: "Central & South America with connections to Europe.",
+    uni_l_cov: "Central & South America.",
     uni_badge_ca: "Central America",
     uni_badge_sa: "South America",
-    uni_badge_eu: "Europe (connections)",
+    
 
     // Lightbox
     lb_close: "Close",
