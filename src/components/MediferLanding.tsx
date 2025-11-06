@@ -49,7 +49,7 @@ const T: Record<Lang, Record<string, string>> = {
     nav_cobertura: "Cobertura",
     nav_contacto: "Contacto",
 
-    // Hero (dos líneas controladas)
+    // Hero
     hero_l1: "Conectando la salud,",
     hero_l2: "Generando confianza.",
     hero_chip: "Distribución farmacéutica internacional",
@@ -115,7 +115,7 @@ const T: Record<Lang, Record<string, string>> = {
     nav_cobertura: "Coverage",
     nav_contacto: "Contact",
 
-    // Hero (two controlled lines)
+    // Hero
     hero_l1: "Connecting Health,",
     hero_l2: "Delivering Trust.",
     hero_chip: "International pharmaceutical distribution",
@@ -159,7 +159,6 @@ const T: Record<Lang, Record<string, string>> = {
     uni_l_cov: "Central & South America.",
     uni_badge_ca: "Central America",
     uni_badge_sa: "South America",
-    
 
     // Lightbox
     lb_close: "Close",
@@ -468,13 +467,11 @@ const MediferLanding: React.FC = () => {
               <h1
                 className={[
                   "mt-4 font-extrabold leading-tight font-[nunito]",
-                  // EN más grande; ES ligeramente más pequeño para evitar saltos
-                  // (ajusta tamaños si lo deseas)
                   ((): string => {
                     if (typeof window !== "undefined" && window.innerWidth >= 768) {
                       return lang === "es" ? "text-[40px] md:text-[56px]" : "text-[44px] md:text-6xl";
                     }
-                    return lang === "es" ? "text-4xl" : "text-4xl";
+                    return "text-4xl";
                   })(),
                 ].join(" ")}
                 style={{ textWrap: "balance" as any }}
@@ -788,7 +785,6 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
           <div className="grid md:grid-cols-3 gap-6 text-white/90">
             <Badge index={0}>{t("uni_badge_ca")}</Badge>
             <Badge index={1}>{t("uni_badge_sa")}</Badge>
-            
           </div>
         </RevealBlock>
 
@@ -802,24 +798,32 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 /* ========= CARRUSEL INFINITO INLINE + LIGHTBOX ========= */
 function InlineMarquee({ images, t }: { images: string[]; t: (k: string) => string }) {
   const [open, setOpen] = useState<string | null>(null);
+
+  // Duplicamos la lista para loop perfecto
   const track = [...images, ...images];
-  const DURATION = 10;
+
+  // Velocidad (ajusta a gusto)
+  const DURATION = 18;
 
   return (
     <div className="mt-12">
       <div className="relative overflow-hidden">
+        {/* fade edges nice-to-have */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#0b1220] to-transparent opacity-70" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#0b1220] to-transparent opacity-70" />
+
         <motion.div
-          className="flex gap-6"
-          initial={{ x: 0 }}
-          animate={{ x: "-60%" }}
-          transition={{ repeat: Infinity, repeatType: "loop", ease: "linear", duration: DURATION }}
+          className="flex gap-4 md:gap-6"
+          // 👇 Recorre media pista (-50%) para mostrar TODAS las imágenes y repetir sin salto
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: DURATION, ease: "linear", repeat: Infinity }}
         >
           {track.map((src, i) => (
             <button
               key={`${src}-${i}`}
-              className="group relative shrink-0 w-[520px] md:w-[640px] aspect-[16/9] overflow-hidden rounded-xl md:rounded-2xl will-change-transform transform-gpu"
+              className="group relative shrink-0 w-[72vw] md:w-[560px] aspect-[4/3] md:aspect-[16/9] overflow-hidden rounded-xl md:rounded-2xl will-change-transform transform-gpu"
               onClick={() => setOpen(src)}
-              aria-label="Ver imagen"
+              aria-label={`${t("photo")} ${i + 1}`}
             >
               <img
                 src={src}
