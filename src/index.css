@@ -1,0 +1,12 @@
+/* src/index.css */
+@import "tailwindcss";
+
+/* (Opcional) Define el tema de Medifer aquí mismo */
+@theme {
+  --color-medifer-blue: #0574bb;
+  --color-medifer-teal: #009fa5;
+  --color-medifer-gray: #888989;
+  --color-medifer-white: #f8f7f7;
+
+  --font-nunito: "Nunito", ui-sans-serif, system-ui, sans-serif;
+}
