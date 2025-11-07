@@ -597,36 +597,34 @@ const MediferLanding: React.FC = () => {
             </div>
 
             <form
-              className="grid md:grid-cols-2 gap-4 max-w-3xl"
-              onSubmit={handleContactSubmit}
-            >
-              <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_name")} required />
-              <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_company")} />
-              <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_email")} required />
-              <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_phone")} />
-              <textarea
-                name="message"
-                className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100"
-                rows={5}
-                placeholder={t("f_msg")}
-                required
-              />
-              <button
-                type="submit"
-                disabled={sending}
-                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white disabled:opacity-60"
-                style={{ background: C.blue }}
-              >
-                {sending ? t("f_sending") : t("f_send")}
-              </button>
+  className="grid md:grid-cols-2 gap-4 max-w-3xl"
+  action="https://formsubmit.co/bashar@medifergroup.com"
+  method="POST"
+>
+  {/* Campos visibles */}
+  <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_name')} required />
+  <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_company')} />
+  <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_email')} required />
+  <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_phone')} />
+  <textarea name="message" className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100" rows={5} placeholder={t('f_msg')} required />
 
-              {sentOk === true && (
-                <p className="md:col-span-2 text-emerald-600 font-medium mt-1">{t("f_ok")}</p>
-              )}
-              {sentOk === false && (
-                <p className="md:col-span-2 text-red-600 mt-1">{t("f_err")}</p>
-              )}
-            </form>
+  {/* Ajustes FormSubmit */}
+  <input type="hidden" name="_subject" value="Nuevo contacto desde Medifer Landing" />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_captcha" value="false" />
+  {/* URL a la que quieres redirigir tras enviar */}
+  <input type="hidden" name="_next" value="https://medifer-landing.vercel.app/?sent=1" />
+  {/* Honeypot anti-bots */}
+  <input type="text" name="_honey" className="hidden" />
+
+  <button
+    type="submit"
+    className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white"
+    style={{ background: C.blue }}
+  >
+    {t('f_send')}
+  </button>
+</form>
           </Wrap>
         </section>
       </main>
