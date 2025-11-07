@@ -618,78 +618,41 @@ const MediferLanding: React.FC = () => {
             </div>
 
             <form
-              className="grid md:grid-cols-2 gap-4 max-w-3xl"
-              onSubmit={(e) => {
-                e.preventDefault();
-                submitForm();
-              }}
-            >
-              {/* Honeypot anti-bots (oculto visualmente) */}
-              <input
-                tabIndex={-1}
-                autoComplete="off"
-                className="absolute -left-[9999px] -top-[9999px] opacity-0"
-                aria-hidden="true"
-                value={trap}
-                onChange={(e) => setTrap(e.target.value)}
-              />
+  className="grid md:grid-cols-2 gap-4 max-w-3xl"
+  onSubmit={async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget as HTMLFormElement);
+    const payload = {
+      name: String(fd.get("name") || ""),
+      company: String(fd.get("company") || ""),
+      email: String(fd.get("email") || ""),
+      phone: String(fd.get("phone") || ""),
+      message: String(fd.get("message") || ""),
+    };
+    try {
+      const r = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!r.ok) throw new Error("fail");
+      alert("¡Mensaje enviado! Gracias por escribirnos.");
+      (e.currentTarget as HTMLFormElement).reset();
+    } catch {
+      alert("No se pudo enviar. Inténtalo de nuevo en unos minutos.");
+    }
+  }}
+>
+  <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_name")} />
+  <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_company")} />
+  <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_email")} />
+  <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_phone")} />
+  <textarea name="message" className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100" rows={5} placeholder={t("f_msg")} />
+  <button type="submit" className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white" style={{ background: C.blue }}>
+    {t("f_send")}
+  </button>
+</form>
 
-              <input
-                className="px-4 py-3 rounded-xl bg-slate-100"
-                placeholder={t("f_name")}
-                value={fName}
-                onChange={(e) => setFName(e.target.value)}
-                required
-              />
-              <input
-                className="px-4 py-3 rounded-xl bg-slate-100"
-                placeholder={t("f_company")}
-                value={fCompany}
-                onChange={(e) => setFCompany(e.target.value)}
-              />
-              <input
-                className="px-4 py-3 rounded-xl bg-slate-100"
-                placeholder={t("f_email")}
-                type="email"
-                value={fEmail}
-                onChange={(e) => setFEmail(e.target.value)}
-                required
-              />
-              <input
-                className="px-4 py-3 rounded-xl bg-slate-100"
-                placeholder={t("f_phone")}
-                value={fPhone}
-                onChange={(e) => setFPhone(e.target.value)}
-              />
-              <textarea
-                className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100"
-                rows={5}
-                placeholder={t("f_msg")}
-                value={fMsg}
-                onChange={(e) => setFMsg(e.target.value)}
-                required
-              />
-              <button
-                type="submit"
-                disabled={sending}
-                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white disabled:opacity-60"
-                style={{ background: C.blue }}
-              >
-                {sending ? t("f_sending") : t("f_send")}
-              </button>
-
-              {/* Estado */}
-              {status === "ok" && (
-                <p className="md:col-span-2 text-green-600 font-medium">
-                  {t("f_ok")}
-                </p>
-              )}
-              {status === "err" && (
-                <p className="md:col-span-2 text-red-600 font-medium">
-                  {t("f_err")}
-                </p>
-              )}
-            </form>
           </Wrap>
         </section>
       </main>

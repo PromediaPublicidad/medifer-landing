@@ -1,44 +1,44 @@
 // /api/contact.js
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.status(405).json({ ok: false, error: "Method Not Allowed" });
-    return;
-  }
+  if (req.method !== "POST") return res.status(405).json({ ok: false, error: "Method not allowed" });
+
+  const { name, company, email, phone, message } = req.body || {};
 
   try {
-    const { name, company, email, phone, message, trap } = req.body || {};
-    if (typeof trap === "string" && trap.trim() !== "") {
-      res.status(200).json({ ok: true });
-      return;
-    }
-    if (!name || !email || !message) {
-      res.status(400).json({ ok: false, error: "Missing required fields" });
-      return;
-    }
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,                   // ej: smtp.gmail.com
+      port: Number(process.env.SMTP_PORT || 465),    // 465 (secure) o 587
+      secure: String(process.env.SMTP_PORT || "465") === "465",
+      auth: {
+        user: process.env.SMTP_USER,                 // tu cuenta SMTP
+        pass: process.env.SMTP_PASS,                 // tu app password/SMTP pass
+      },
+    });
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const to = process.env.TO_EMAIL || "contact@medifergroup.com";
+    const from = process.env.CONTACT_FROM || process.env.SMTP_USER;
+    const to = process.env.CONTACT_TO || "bashar@medifergroup.com";
 
-    await resend.emails.send({
-      from: "Medifer <no-reply@medifergroup.com>",
+    await transporter.sendMail({
+      from,
       to,
-      replyTo: email,
-      subject: `Nuevo contacto: ${name} — Medifer`,
+      subject: `Contacto Web - ${name || "Sin nombre"}`,
+      replyTo: email || undefined,
       text: [
-        `Nombre: ${name}`,
+        `Nombre: ${name || "-"}`,
         `Empresa: ${company || "-"}`,
-        `Email: ${email}`,
+        `Email: ${email || "-"}`,
         `Teléfono: ${phone || "-"}`,
-        "",
-        "Mensaje:",
-        message,
+        ``,
+        `Mensaje:`,
+        `${message || "-"}`,
       ].join("\n"),
     });
 
-    res.status(200).json({ ok: true });
+    return res.status(200).json({ ok: true });
   } catch (err) {
-    res.status(500).json({ ok: false, error: err?.message || "Server error" });
+    console.error("MAIL_ERROR:", err?.message || err);
+    return res.status(500).json({ ok: false, error: "Mail error" });
   }
 }
