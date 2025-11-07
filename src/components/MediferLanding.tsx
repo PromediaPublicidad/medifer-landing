@@ -16,6 +16,13 @@ import {
 } from "framer-motion";
 import HeroAmericasMapBG from "./HeroAmericasMapBG";
 
+/**
+ * IMPORTANTE (envío de formulario):
+ * - Configura en Vercel -> Settings -> Environment Variables:
+ *   TO_EMAIL = bashar@medifergroup.com
+ * - Backend: /api/contact.(ts|js) usa RESEND_API_KEY y TO_EMAIL
+ */
+
 /* ========================== Brand ========================== */
 const C = {
   blue: "#0574bb",
@@ -53,13 +60,15 @@ const T: Record<Lang, Record<string, string>> = {
     hero_l1: "Conectando la salud,",
     hero_l2: "Generando confianza.",
     hero_chip: "Distribución farmacéutica internacional",
-    hero_lead: "Hub estratégico con rutas optimizadas hacia Centro y Suramérica.",
+    hero_lead:
+      "Hub estratégico con rutas optimizadas hacia Centro y Suramérica.",
     hero_cta_capacidades: "Ver capacidades",
     hero_cta_hablemos: "Hablemos",
 
     // Hub Panamá
     hub_kicker: "Panamá: Hub logístico",
-    hub_title: "Enlace natural entre océanos, con tiempos de tránsito imbatibles.",
+    hub_title:
+      "Enlace natural entre océanos, con tiempos de tránsito imbatibles.",
     hub_lead:
       "Consolidamos cargas, gestionamos documentación y aseguramos cadena de frío con operadores homologados. Nuestra ubicación reduce costos totales y maximiza la disponibilidad de producto en destino.",
     hub_stat1: "Lead time típico a Centroamérica",
@@ -72,15 +81,18 @@ const T: Record<Lang, Record<string, string>> = {
     uni_l_logistica:
       "Consolidación, documentación y operadores homologados para LATAM y conexiones intercontinentales.",
     uni_card_hub: "Hub Panamá",
-    uni_card_hub_d: "Tránsitos optimizados LATAM + conexiones intercontinentales.",
+    uni_card_hub_d:
+      "Tránsitos optimizados LATAM + conexiones intercontinentales.",
     uni_card_route: "Ruteo y costos",
-    uni_card_route_d: "Optimización de rutas y reducción de costo total entregado.",
+    uni_card_route_d:
+      "Optimización de rutas y reducción de costo total entregado.",
     uni_card_comp: "Compliance",
     uni_card_comp_d: "Procesos auditables, SOPs y partners homologados.",
 
     uni_k_temp: "Temperaturas",
     uni_t_temp: "Cadena de frío",
-    uni_l_temp: "Control térmico, registros y embalaje validado para fármacos sensibles.",
+    uni_l_temp:
+      "Control térmico, registros y embalaje validado para fármacos sensibles.",
     uni_temp_1_big: "2–8 °C",
     uni_temp_1_small: "Manejo refrigerado",
     uni_temp_2_big: "15–25 °C",
@@ -100,13 +112,17 @@ const T: Record<Lang, Record<string, string>> = {
 
     // Contacto
     contact_title: "Conversemos",
-    contact_lead: "Cuéntanos tu necesidad logística y te proponemos la mejor ruta.",
+    contact_lead:
+      "Cuéntanos tu necesidad logística y te proponemos la mejor ruta.",
     f_name: "Nombre",
     f_company: "Empresa",
     f_email: "Email",
     f_phone: "Teléfono",
     f_msg: "Mensaje",
     f_send: "Enviar",
+    f_sending: "Enviando…",
+    f_ok: "¡Gracias! Te contactaremos pronto.",
+    f_err: "Ups, algo falló. Inténtalo de nuevo.",
   },
   en: {
     // Header
@@ -119,13 +135,15 @@ const T: Record<Lang, Record<string, string>> = {
     hero_l1: "Connecting Health,",
     hero_l2: "Delivering Trust.",
     hero_chip: "International pharmaceutical distribution",
-    hero_lead: "Strategic hub with optimized routes to Central and South America.",
+    hero_lead:
+      "Strategic hub with optimized routes to Central and South America.",
     hero_cta_capacidades: "See capabilities",
     hero_cta_hablemos: "Let’s talk",
 
     // Hub Panamá
     hub_kicker: "Panama: Logistics hub",
-    hub_title: "Natural link between oceans with unbeatable transit times.",
+    hub_title:
+      "Natural link between oceans with unbeatable transit times.",
     hub_lead:
       "We consolidate cargo, handle documentation and secure the cold chain with approved operators. Our location reduces total costs and maximizes product availability at destination.",
     hub_stat1: "Typical lead time to Central America",
@@ -138,15 +156,18 @@ const T: Record<Lang, Record<string, string>> = {
     uni_l_logistica:
       "Consolidation, documentation and approved operators for LATAM and intercontinental connections.",
     uni_card_hub: "Panama Hub",
-    uni_card_hub_d: "Optimized LATAM transits + intercontinental connections.",
+    uni_card_hub_d:
+      "Optimized LATAM transits + intercontinental connections.",
     uni_card_route: "Routing & costs",
-    uni_card_route_d: "Route optimization and reduced total delivered cost.",
+    uni_card_route_d:
+      "Route optimization and reduced total delivered cost.",
     uni_card_comp: "Compliance",
     uni_card_comp_d: "Auditable processes, SOPs and approved partners.",
 
     uni_k_temp: "Temperatures",
     uni_t_temp: "Cold chain",
-    uni_l_temp: "Thermal control, records and validated packaging for sensitive drugs.",
+    uni_l_temp:
+      "Thermal control, records and validated packaging for sensitive drugs.",
     uni_temp_1_big: "2–8 °C",
     uni_temp_1_small: "Refrigerated handling",
     uni_temp_2_big: "15–25 °C",
@@ -166,19 +187,25 @@ const T: Record<Lang, Record<string, string>> = {
 
     // Contact
     contact_title: "Let’s talk",
-    contact_lead: "Tell us your logistics need and we’ll propose the best route.",
+    contact_lead:
+      "Tell us your logistics need and we’ll propose the best route.",
     f_name: "Name",
     f_company: "Company",
     f_email: "Email",
     f_phone: "Phone",
     f_msg: "Message",
     f_send: "Send",
+    f_sending: "Sending…",
+    f_ok: "Thanks! We’ll get back to you soon.",
+    f_err: "Oops, something failed. Try again.",
   },
 };
 
 function useLang(): [Lang, (l: Lang) => void, (k: string) => string] {
   const [lang, setLang] = useState<Lang>(() => {
-    const saved = (typeof window !== "undefined" && localStorage.getItem("medifer.lang")) as Lang | null;
+    const saved =
+      (typeof window !== "undefined" &&
+        (localStorage.getItem("medifer.lang") as Lang | null)) || null;
     return saved === "en" || saved === "es" ? saved : "es";
   });
   useEffect(() => {
@@ -344,9 +371,16 @@ const MediferLanding: React.FC = () => {
   const [lang, setLang, t] = useLang();
 
   // Avión siguiendo el scroll (solo desktop/tablet)
-  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start start", "end end"],
+  });
   const x = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], [0, -40, -80, -120]);
-  const y = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0, 120, 260, 430, 600]);
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.5, 0.8, 1],
+    [0, 120, 260, 430, 600]
+  );
   const rotatePath = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 3, -4]);
 
   const planeTheme = usePlaneTheme();
@@ -369,6 +403,51 @@ const MediferLanding: React.FC = () => {
 
   const headerText = isLight ? "text-white" : "text-slate-900";
   const linkHover = isLight ? "hover:bg-white/10" : "hover:bg-slate-900/10";
+
+  /* ====== Form state (Conversemos) ====== */
+  const [fName, setFName] = useState("");
+  const [fCompany, setFCompany] = useState("");
+  const [fEmail, setFEmail] = useState("");
+  const [fPhone, setFPhone] = useState("");
+  const [fMsg, setFMsg] = useState("");
+  const [trap, setTrap] = useState(""); // honeypot
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<"ok" | "err" | "idle">("idle");
+
+  async function submitForm() {
+    try {
+      setSending(true);
+      setStatus("idle");
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fName,
+          company: fCompany,
+          email: fEmail,
+          phone: fPhone,
+          message: fMsg,
+          trap,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.ok) {
+        setStatus("ok");
+        setFName("");
+        setFCompany("");
+        setFEmail("");
+        setFPhone("");
+        setFMsg("");
+        setTrap("");
+      } else {
+        setStatus("err");
+      }
+    } catch {
+      setStatus("err");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div className="w-full min-h-screen text-white bg-slate-900">
@@ -399,13 +478,22 @@ const MediferLanding: React.FC = () => {
           {/* NAV desktop/tablet; móvil: oculto (solo idioma) */}
           <div className="hidden md:flex items-center gap-4">
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <a href="#logistica" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
+              <a
+                href="#logistica"
+                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
+              >
                 {t("nav_logistica")}
               </a>
-              <a href="#cadena" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
+              <a
+                href="#cadena"
+                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
+              >
                 {t("nav_cadena")}
               </a>
-              <a href="#cobertura" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
+              <a
+                href="#cobertura"
+                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
+              >
                 {t("nav_cobertura")}
               </a>
               <a
@@ -468,8 +556,13 @@ const MediferLanding: React.FC = () => {
                 className={[
                   "mt-4 font-extrabold leading-tight font-[nunito]",
                   ((): string => {
-                    if (typeof window !== "undefined" && window.innerWidth >= 768) {
-                      return lang === "es" ? "text-[40px] md:text-[56px]" : "text-[44px] md:text-6xl";
+                    if (
+                      typeof window !== "undefined" &&
+                      window.innerWidth >= 768
+                    ) {
+                      return lang === "es"
+                        ? "text-[40px] md:text-[56px]"
+                        : "text-[44px] md:text-6xl";
                     }
                     return "text-4xl";
                   })(),
@@ -477,7 +570,9 @@ const MediferLanding: React.FC = () => {
                 style={{ textWrap: "balance" as any }}
               >
                 <span className="block max-w-[22ch]">{t("hero_l1")}</span>
-                <span className="block max-w-[22ch] opacity-90">{t("hero_l2")}</span>
+                <span className="block max-w-[22ch] opacity-90">
+                  {t("hero_l2")}
+                </span>
               </h1>
 
               <p className="mt-5 text-white/90 max-w-xl">{t("hero_lead")}</p>
@@ -516,27 +611,84 @@ const MediferLanding: React.FC = () => {
         >
           <Wrap className="py-24">
             <div className="mb-6">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-2">{t("contact_title")}</h2>
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-2">
+                {t("contact_title")}
+              </h2>
               <p className="text-slate-600">{t("contact_lead")}</p>
             </div>
 
-            <form className="grid md:grid-cols-2 gap-4 max-w-3xl">
-              <input className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_name")} />
-              <input className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_company")} />
-              <input className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_email")} />
-              <input className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_phone")} />
+            <form
+              className="grid md:grid-cols-2 gap-4 max-w-3xl"
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitForm();
+              }}
+            >
+              {/* Honeypot anti-bots (oculto visualmente) */}
+              <input
+                tabIndex={-1}
+                autoComplete="off"
+                className="absolute -left-[9999px] -top-[9999px] opacity-0"
+                aria-hidden="true"
+                value={trap}
+                onChange={(e) => setTrap(e.target.value)}
+              />
+
+              <input
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_name")}
+                value={fName}
+                onChange={(e) => setFName(e.target.value)}
+                required
+              />
+              <input
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_company")}
+                value={fCompany}
+                onChange={(e) => setFCompany(e.target.value)}
+              />
+              <input
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_email")}
+                type="email"
+                value={fEmail}
+                onChange={(e) => setFEmail(e.target.value)}
+                required
+              />
+              <input
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_phone")}
+                value={fPhone}
+                onChange={(e) => setFPhone(e.target.value)}
+              />
               <textarea
                 className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100"
                 rows={5}
                 placeholder={t("f_msg")}
+                value={fMsg}
+                onChange={(e) => setFMsg(e.target.value)}
+                required
               />
               <button
-                type="button"
-                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white"
+                type="submit"
+                disabled={sending}
+                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white disabled:opacity-60"
                 style={{ background: C.blue }}
               >
-                {t("f_send")}
+                {sending ? t("f_sending") : t("f_send")}
               </button>
+
+              {/* Estado */}
+              {status === "ok" && (
+                <p className="md:col-span-2 text-green-600 font-medium">
+                  {t("f_ok")}
+                </p>
+              )}
+              {status === "err" && (
+                <p className="md:col-span-2 text-red-600 font-medium">
+                  {t("f_err")}
+                </p>
+              )}
             </form>
           </Wrap>
         </section>
@@ -548,7 +700,10 @@ const MediferLanding: React.FC = () => {
 export default MediferLanding;
 
 /* =================== Helpers =================== */
-function Wrap({ className = "", children }: PropsWithChildren<{ className?: string }>): JSX.Element {
+function Wrap({
+  className = "",
+  children,
+}: PropsWithChildren<{ className?: string }>): JSX.Element {
   return <div className={`mx-auto max-w-7xl px-6 ${className}`}>{children}</div>;
 }
 const Feature: React.FC<{ title: string; desc: string }> = ({ title, desc }) => (
@@ -581,21 +736,31 @@ function LangToggle({
 
   return (
     <div
-      className={`flex items-center rounded-full border ${compact ? "px-1 py-1" : "px-1.5 py-1.5"} ${containerClass}`}
+      className={`flex items-center rounded-full border ${
+        compact ? "px-1 py-1" : "px-1.5 py-1.5"
+      } ${containerClass}`}
       role="group"
       aria-label="Language switch"
-      style={{ boxShadow: isLight ? "0 0 0 1px rgba(255,255,255,.05) inset" : "0 0 0 1px rgba(0,0,0,.03) inset" }}
+      style={{
+        boxShadow: isLight
+          ? "0 0 0 1px rgba(255,255,255,.05) inset"
+          : "0 0 0 1px rgba(0,0,0,.03) inset",
+      }}
     >
       <button
         onClick={() => onChange("es")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "es" ? activeClass : idleClass}`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
+          lang === "es" ? activeClass : idleClass
+        }`}
         aria-pressed={lang === "es"}
       >
         ES
       </button>
       <button
         onClick={() => onChange("en")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "en" ? activeClass : idleClass}`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
+          lang === "en" ? activeClass : idleClass
+        }`}
         aria-pressed={lang === "en"}
       >
         EN
@@ -691,20 +856,40 @@ function HubPanamaSection({
         </div>
 
         <div className="max-w-3xl">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">{t("hub_title")}</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
+            {t("hub_title")}
+          </h2>
           <p className="text-white/90 mb-8">{t("hub_lead")}</p>
 
           <div className="grid md:grid-cols-3 gap-4">
             <StatCard
-              title={<><Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} /></>}
+              title={
+                <>
+                  <Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} />
+                </>
+              }
               desc={t("hub_stat1")}
             />
             <StatCard
-              title={<><Counter to={96} startWhenInViewRef={sectionRef} /> – <Counter to={120} suffix=" h" startWhenInViewRef={sectionRef} /></>}
+              title={
+                <>
+                  <Counter to={96} startWhenInViewRef={sectionRef} /> –{" "}
+                  <Counter
+                    to={120}
+                    suffix=" h"
+                    startWhenInViewRef={sectionRef}
+                  />
+                </>
+              }
               desc={t("hub_stat2")}
             />
             <StatCard
-              title={<><Counter to={24} startWhenInViewRef={sectionRef} />/<span>7</span></>}
+              title={
+                <>
+                  <Counter to={24} startWhenInViewRef={sectionRef} />
+                  /<span>7</span>
+                </>
+              }
               desc={t("hub_stat3")}
             />
           </div>
@@ -759,9 +944,21 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
           lead={t("uni_l_logistica")}
         >
           <div className="grid md:grid-cols-3 gap-6">
-            <InfoCard index={0} title={t("uni_card_hub")} desc={t("uni_card_hub_d")} />
-            <InfoCard index={1} title={t("uni_card_route")} desc={t("uni_card_route_d")} />
-            <InfoCard index={2} title={t("uni_card_comp")} desc={t("uni_card_comp_d")} />
+            <InfoCard
+              index={0}
+              title={t("uni_card_hub")}
+              desc={t("uni_card_hub_d")}
+            />
+            <InfoCard
+              index={1}
+              title={t("uni_card_route")}
+              desc={t("uni_card_route_d")}
+            />
+            <InfoCard
+              index={2}
+              title={t("uni_card_comp")}
+              desc={t("uni_card_comp_d")}
+            />
           </div>
         </RevealBlock>
 
@@ -771,9 +968,21 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
           lead={t("uni_l_temp")}
         >
           <ul className="grid md:grid-cols-3 gap-6 text-white/90">
-            <MiniCard index={0} big={t("uni_temp_1_big")} small={t("uni_temp_1_small")} />
-            <MiniCard index={1} big={t("uni_temp_2_big")} small={t("uni_temp_2_small")} />
-            <MiniCard index={2} big={t("uni_temp_3_big")} small={t("uni_temp_3_small")} />
+            <MiniCard
+              index={0}
+              big={t("uni_temp_1_big")}
+              small={t("uni_temp_1_small")}
+            />
+            <MiniCard
+              index={1}
+              big={t("uni_temp_2_big")}
+              small={t("uni_temp_2_small")}
+            />
+            <MiniCard
+              index={2}
+              big={t("uni_temp_3_big")}
+              small={t("uni_temp_3_small")}
+            />
           </ul>
         </RevealBlock>
 
@@ -796,25 +1005,31 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 }
 
 /* ========= CARRUSEL INFINITO INLINE + LIGHTBOX ========= */
-function InlineMarquee({ images, t }: { images: string[]; t: (k: string) => string }) {
+function InlineMarquee({
+  images,
+  t,
+}: {
+  images: string[];
+  t: (k: string) => string;
+}) {
   const [open, setOpen] = useState<string | null>(null);
 
   // Duplicamos la lista para loop perfecto
   const track = [...images, ...images];
 
-  // Velocidad (ajusta a gusto)
+  // Velocidad
   const DURATION = 18;
 
   return (
     <div className="mt-12">
       <div className="relative overflow-hidden">
-        {/* fade edges nice-to-have */}
+        {/* fade edges */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#0b1220] to-transparent opacity-70" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#0b1220] to-transparent opacity-70" />
 
         <motion.div
           className="flex gap-4 md:gap-6"
-          // 👇 Recorre media pista (-50%) para mostrar TODAS las imágenes y repetir sin salto
+          // Recorre media pista (-50%) para mostrar TODAS las imágenes y repetir sin salto
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: DURATION, ease: "linear", repeat: Infinity }}
         >
