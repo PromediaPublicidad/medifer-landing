@@ -1,66 +1,59 @@
 // /api/contact.js
-const nodemailer = require('nodemailer');
+import { Resend } from "resend";
 
-module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ ok: false, error: 'Method Not Allowed' });
+const resend = new Resend(process.env.RESEND_API_KEY);
+const FROM = process.env.FROM || "Medifer <onboarding@resend.dev>";
+const TO = process.env.CONTACT_TO || process.env.TO || "bashar@medifergroup.com";
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ ok: false, error: "Method not allowed" });
   }
 
   try {
-    const { name, company, email, phone, message } = (req.body || {});
+    const body = typeof req.body === "object" ? req.body : JSON.parse(req.body || "{}");
+    const { name, company, email, phone, message } = body;
 
     if (!name || !email || !message) {
-      return res.status(400).json({ ok: false, error: 'Missing fields' });
+      return res.status(400).json({ ok: false, error: "Missing fields" });
     }
-
-    const {
-      SMTP_HOST,
-      SMTP_PORT,
-      SMTP_USER,
-      SMTP_PASS,
-      TO_EMAIL,
-    } = process.env;
-
-    if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS || !TO_EMAIL) {
-      return res.status(500).json({ ok: false, error: 'SMTP env not set' });
-    }
-
-    const port = Number(SMTP_PORT);
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port,
-      secure: port === 465, // 465 = SSL; 587/25 = STARTTLS
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-    });
-
-    const safe = (s) =>
-      String(s || '').replace(/[&<>"']/g, (c) =>
-        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[c])
-      );
 
     const html = `
-      <h2>Nuevo contacto Medifer</h2>
-      <p><b>Nombre:</b> ${safe(name)}</p>
-      <p><b>Empresa:</b> ${safe(company)}</p>
-      <p><b>Email:</b> ${safe(email)}</p>
-      <p><b>Teléfono:</b> ${safe(phone)}</p>
-      <p><b>Mensaje:</b><br/>${safe(message).replace(/\n/g,'<br/>')}</p>
+      <table style="width:100%;max-width:640px;border-collapse:collapse;font-family:Inter,Arial,sans-serif;">
+        <tr><td style="padding:16px 0;">
+          <h2 style="margin:0 0 8px;color:#0574bb;">Nuevo contacto - Medifer</h2>
+          <p style="margin:0;color:#0f172a;">Detalles:</p>
+        </td></tr>
+        <tr><td style="padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;">
+          <p style="margin:0 0 6px;"><strong>Nombre:</strong> ${name}</p>
+          <p style="margin:0 0 6px;"><strong>Empresa:</strong> ${company || "—"}</p>
+          <p style="margin:0 0 6px;"><strong>Email:</strong> ${email}</p>
+          <p style="margin:0 0 6px;"><strong>Teléfono:</strong> ${phone || "—"}</p>
+          <p style="margin:12px 0 0;"><strong>Mensaje:</strong></p>
+          <p style="white-space:pre-wrap;margin:6px 0 0;">${message || "—"}</p>
+        </td></tr>
+        <tr><td style="padding:10px 0;color:#64748b;font-size:12px;">
+          Enviado desde medifergroup.com
+        </td></tr>
+      </table>
     `;
 
-    await transporter.sendMail({
-      from: `"Medifer Website" <${SMTP_USER}>`, // muchos SMTP exigen FROM propio
-      to: TO_EMAIL,
-      replyTo: email,
-      subject: `Contacto web: ${name}`,
-      text:
-        `Nombre: ${name}\nEmpresa: ${company || ''}\nEmail: ${email}\n` +
-        `Teléfono: ${phone || ''}\n\n${message}`,
+    const resp = await resend.emails.send({
+      from: FROM,
+      to: [TO],
+      reply_to: email || undefined,
+      subject: `Contacto: ${name}`,
       html,
     });
 
+    if (resp?.error) {
+      console.error("RESEND_ERROR", resp.error);
+      return res.status(500).json({ ok: false, error: "Resend error" });
+    }
+
     return res.status(200).json({ ok: true });
   } catch (err) {
-    console.error('CONTACT_SERVER_ERROR', err && err.message ? err.message : err);
-    return res.status(500).json({ ok: false, error: 'Server error' });
+    console.error("CONTACT_API_ERROR", err);
+    return res.status(500).json({ ok: false, error: "Internal error" });
   }
-};
+}
