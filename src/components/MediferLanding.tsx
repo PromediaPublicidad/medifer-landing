@@ -17,10 +17,10 @@ import {
 import HeroAmericasMapBG from "./HeroAmericasMapBG";
 
 /**
- * IMPORTANTE (envío de formulario):
- * - Configura en Vercel -> Settings -> Environment Variables:
+ * Formulario -> /api/contact (serverless)
+ * Requiere en Vercel (Settings → Environment Variables):
  *   TO_EMAIL = bashar@medifergroup.com
- * - Backend: /api/contact.(ts|js) usa RESEND_API_KEY y TO_EMAIL
+ *   (y lo que use tu /api/contact para autenticarse con el proveedor de email)
  */
 
 /* ========================== Brand ========================== */
@@ -142,8 +142,7 @@ const T: Record<Lang, Record<string, string>> = {
 
     // Hub Panamá
     hub_kicker: "Panama: Logistics hub",
-    hub_title:
-      "Natural link between oceans with unbeatable transit times.",
+    hub_title: "Natural link between oceans with unbeatable transit times.",
     hub_lead:
       "We consolidate cargo, handle documentation and secure the cold chain with approved operators. Our location reduces total costs and maximizes product availability at destination.",
     hub_stat1: "Typical lead time to Central America",
@@ -256,7 +255,7 @@ function usePlaneTheme(sectionSelectors: string = "[data-plane]"): PlaneTheme {
   return theme;
 }
 
-/* Hook: cambia el tema del header SOLO si estás sobre #contacto */
+/* Hook: logo claro/oscuro SOLO en #contacto */
 function useHeaderLogoTheme(
   contactSelector: string = "#contacto",
   headerHeight = 72
@@ -288,7 +287,7 @@ function useHeaderLogoTheme(
 
     const onResize = () => calc();
 
-    calc(); // primer cálculo
+    calc();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
@@ -367,7 +366,7 @@ function Counter({
 /* ===================== Página ===================== */
 const MediferLanding: React.FC = () => {
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const isMobile = useIsMobile(768); // móvil: ocultar mapa y avión
+  const isMobile = useIsMobile(768);
   const [lang, setLang, t] = useLang();
 
   // Avión siguiendo el scroll (solo desktop/tablet)
@@ -376,11 +375,7 @@ const MediferLanding: React.FC = () => {
     offset: ["start start", "end end"],
   });
   const x = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], [0, -40, -80, -120]);
-  const y = useTransform(
-    scrollYProgress,
-    [0, 0.2, 0.5, 0.8, 1],
-    [0, 120, 260, 430, 600]
-  );
+  const y = useTransform(scrollYProgress, [0, 0.2, 0.5, 0.8, 1], [0, 120, 260, 430, 600]);
   const rotatePath = useTransform(scrollYProgress, [0, 0.5, 1], [-5, 3, -4]);
 
   const planeTheme = usePlaneTheme();
@@ -405,45 +400,47 @@ const MediferLanding: React.FC = () => {
   const linkHover = isLight ? "hover:bg-white/10" : "hover:bg-slate-900/10";
 
   /* ====== Form state (Conversemos) ====== */
-  const [fName, setFName] = useState("");
-  const [fCompany, setFCompany] = useState("");
-  const [fEmail, setFEmail] = useState("");
-  const [fPhone, setFPhone] = useState("");
-  const [fMsg, setFMsg] = useState("");
-  const [trap, setTrap] = useState(""); // honeypot
   const [sending, setSending] = useState(false);
-  const [status, setStatus] = useState<"ok" | "err" | "idle">("idle");
+  const [sentOk, setSentOk] = useState<null | boolean>(null);
 
-  async function submitForm() {
+  // submit del formulario (top-level, NO dentro de otros componentes)
+  async function handleContactSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (sending) return;
+
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: String(fd.get("name") || ""),
+      company: String(fd.get("company") || ""),
+      email: String(fd.get("email") || ""),
+      phone: String(fd.get("phone") || ""),
+      message: String(fd.get("message") || ""),
+    };
+
+    if (!payload.name || !payload.email || !payload.message) {
+      setSentOk(false);
+      return;
+    }
+
     try {
       setSending(true);
-      setStatus("idle");
+      setSentOk(null);
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: fName,
-          company: fCompany,
-          email: fEmail,
-          phone: fPhone,
-          message: fMsg,
-          trap,
-        }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
-      if (res.ok && data?.ok) {
-        setStatus("ok");
-        setFName("");
-        setFCompany("");
-        setFEmail("");
-        setFPhone("");
-        setFMsg("");
-        setTrap("");
+      if (res.ok && (data?.ok === undefined || data.ok === true)) {
+        setSentOk(true);
+        (e.currentTarget as HTMLFormElement).reset();
       } else {
-        setStatus("err");
+        console.error("CONTACT_FAIL", data);
+        setSentOk(false);
       }
-    } catch {
-      setStatus("err");
+    } catch (err) {
+      console.error("CONTACT_ERR", err);
+      setSentOk(false);
     } finally {
       setSending(false);
     }
@@ -478,22 +475,13 @@ const MediferLanding: React.FC = () => {
           {/* NAV desktop/tablet; móvil: oculto (solo idioma) */}
           <div className="hidden md:flex items-center gap-4">
             <nav className="flex items-center gap-2 text-sm font-medium">
-              <a
-                href="#logistica"
-                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
-              >
+              <a href="#logistica" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
                 {t("nav_logistica")}
               </a>
-              <a
-                href="#cadena"
-                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
-              >
+              <a href="#cadena" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
                 {t("nav_cadena")}
               </a>
-              <a
-                href="#cobertura"
-                className={`px-3 py-2 rounded-full ${linkHover} transition-none`}
-              >
+              <a href="#cobertura" className={`px-3 py-2 rounded-full ${linkHover} transition-none`}>
                 {t("nav_cobertura")}
               </a>
               <a
@@ -556,13 +544,8 @@ const MediferLanding: React.FC = () => {
                 className={[
                   "mt-4 font-extrabold leading-tight font-[nunito]",
                   ((): string => {
-                    if (
-                      typeof window !== "undefined" &&
-                      window.innerWidth >= 768
-                    ) {
-                      return lang === "es"
-                        ? "text-[40px] md:text-[56px]"
-                        : "text-[44px] md:text-6xl";
+                    if (typeof window !== "undefined" && window.innerWidth >= 768) {
+                      return lang === "es" ? "text-[40px] md:text-[56px]" : "text-[44px] md:text-6xl";
                     }
                     return "text-4xl";
                   })(),
@@ -570,9 +553,7 @@ const MediferLanding: React.FC = () => {
                 style={{ textWrap: "balance" as any }}
               >
                 <span className="block max-w-[22ch]">{t("hero_l1")}</span>
-                <span className="block max-w-[22ch] opacity-90">
-                  {t("hero_l2")}
-                </span>
+                <span className="block max-w-[22ch] opacity-90">{t("hero_l2")}</span>
               </h1>
 
               <p className="mt-5 text-white/90 max-w-xl">{t("hero_lead")}</p>
@@ -601,7 +582,7 @@ const MediferLanding: React.FC = () => {
         {/* ======= SECCIÓN ÚNICA: REVEAL POR SCROLL + carrusel inline ======= */}
         <UnifiedInfoSection t={t} />
 
-        {/* Contacto (sin toggle duplicado) */}
+        {/* Contacto */}
         <section
           id="contacto"
           data-plane="dark"
@@ -611,48 +592,41 @@ const MediferLanding: React.FC = () => {
         >
           <Wrap className="py-24">
             <div className="mb-6">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-2">
-                {t("contact_title")}
-              </h2>
+              <h2 className="text-3xl md:text-5xl font-extrabold mb-2">{t("contact_title")}</h2>
               <p className="text-slate-600">{t("contact_lead")}</p>
             </div>
 
             <form
-  className="grid md:grid-cols-2 gap-4 max-w-3xl"
-  onSubmit={async (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget as HTMLFormElement);
-    const payload = {
-      name: String(fd.get("name") || ""),
-      company: String(fd.get("company") || ""),
-      email: String(fd.get("email") || ""),
-      phone: String(fd.get("phone") || ""),
-      message: String(fd.get("message") || ""),
-    };
-    try {
-      const r = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!r.ok) throw new Error("fail");
-      alert("¡Mensaje enviado! Gracias por escribirnos.");
-      (e.currentTarget as HTMLFormElement).reset();
-    } catch {
-      alert("No se pudo enviar. Inténtalo de nuevo en unos minutos.");
-    }
-  }}
->
-  <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_name")} />
-  <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_company")} />
-  <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_email")} />
-  <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_phone")} />
-  <textarea name="message" className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100" rows={5} placeholder={t("f_msg")} />
-  <button type="submit" className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white" style={{ background: C.blue }}>
-    {t("f_send")}
-  </button>
-</form>
+              className="grid md:grid-cols-2 gap-4 max-w-3xl"
+              onSubmit={handleContactSubmit}
+            >
+              <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_name")} required />
+              <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_company")} />
+              <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_email")} required />
+              <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t("f_phone")} />
+              <textarea
+                name="message"
+                className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100"
+                rows={5}
+                placeholder={t("f_msg")}
+                required
+              />
+              <button
+                type="submit"
+                disabled={sending}
+                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white disabled:opacity-60"
+                style={{ background: C.blue }}
+              >
+                {sending ? t("f_sending") : t("f_send")}
+              </button>
 
+              {sentOk === true && (
+                <p className="md:col-span-2 text-emerald-600 font-medium mt-1">{t("f_ok")}</p>
+              )}
+              {sentOk === false && (
+                <p className="md:col-span-2 text-red-600 mt-1">{t("f_err")}</p>
+              )}
+            </form>
           </Wrap>
         </section>
       </main>
@@ -663,10 +637,7 @@ const MediferLanding: React.FC = () => {
 export default MediferLanding;
 
 /* =================== Helpers =================== */
-function Wrap({
-  className = "",
-  children,
-}: PropsWithChildren<{ className?: string }>): JSX.Element {
+function Wrap({ className = "", children }: PropsWithChildren<{ className?: string }>): JSX.Element {
   return <div className={`mx-auto max-w-7xl px-6 ${className}`}>{children}</div>;
 }
 const Feature: React.FC<{ title: string; desc: string }> = ({ title, desc }) => (
@@ -676,7 +647,7 @@ const Feature: React.FC<{ title: string; desc: string }> = ({ title, desc }) => 
   </div>
 );
 
-/* ======= Selector de idioma (con tema adaptativo) ======= */
+/* ======= Selector de idioma ======= */
 function LangToggle({
   lang,
   onChange,
@@ -692,38 +663,26 @@ function LangToggle({
   const containerClass = isLight
     ? "backdrop-blur bg-white/10 border-white/20"
     : "backdrop-blur bg-slate-900/5 border-slate-900/20";
-  const activeClass = isLight
-    ? "bg-white text-slate-900"
-    : "bg-slate-900 text-white";
+  const activeClass = isLight ? "bg-white text-slate-900" : "bg-slate-900 text-white";
   const idleClass = isLight ? "text-white/90" : "text-slate-900/75";
 
   return (
     <div
-      className={`flex items-center rounded-full border ${
-        compact ? "px-1 py-1" : "px-1.5 py-1.5"
-      } ${containerClass}`}
+      className={`flex items-center rounded-full border ${compact ? "px-1 py-1" : "px-1.5 py-1.5"} ${containerClass}`}
       role="group"
       aria-label="Language switch"
-      style={{
-        boxShadow: isLight
-          ? "0 0 0 1px rgba(255,255,255,.05) inset"
-          : "0 0 0 1px rgba(0,0,0,.03) inset",
-      }}
+      style={{ boxShadow: isLight ? "0 0 0 1px rgba(255,255,255,.05) inset" : "0 0 0 1px rgba(0,0,0,.03) inset" }}
     >
       <button
         onClick={() => onChange("es")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
-          lang === "es" ? activeClass : idleClass
-        }`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "es" ? activeClass : idleClass}`}
         aria-pressed={lang === "es"}
       >
         ES
       </button>
       <button
         onClick={() => onChange("en")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
-          lang === "en" ? activeClass : idleClass
-        }`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "en" ? activeClass : idleClass}`}
         aria-pressed={lang === "en"}
       >
         EN
@@ -791,14 +750,10 @@ function HubPanamaSection({
             loop
             preload="auto"
             poster={poster}
-            key={(video.webm || "") + (video.mp4 || "")}
+            key={(video?.webm || "") + (video?.mp4 || "")}
           >
-            {video.webm && supports.webm && (
-              <source src={video.webm} type="video/webm" />
-            )}
-            {video.mp4 && supports.mp4 && (
-              <source src={video.mp4} type="video/mp4" />
-            )}
+            {video?.webm && supports.webm && <source src={video.webm} type="video/webm" />}
+            {video?.mp4 && supports.mp4 && <source src={video.mp4} type="video/mp4" />}
           </video>
         ) : (
           <img
@@ -819,42 +774,16 @@ function HubPanamaSection({
         </div>
 
         <div className="max-w-3xl">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
-            {t("hub_title")}
-          </h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">{t("hub_title")}</h2>
           <p className="text-white/90 mb-8">{t("hub_lead")}</p>
 
           <div className="grid md:grid-cols-3 gap-4">
+            <StatCard title={<><Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} /></>} desc={t("hub_stat1")} />
             <StatCard
-              title={
-                <>
-                  <Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} />
-                </>
-              }
-              desc={t("hub_stat1")}
-            />
-            <StatCard
-              title={
-                <>
-                  <Counter to={96} startWhenInViewRef={sectionRef} /> –{" "}
-                  <Counter
-                    to={120}
-                    suffix=" h"
-                    startWhenInViewRef={sectionRef}
-                  />
-                </>
-              }
+              title={<><Counter to={96} startWhenInViewRef={sectionRef} /> – <Counter to={120} suffix=" h" startWhenInViewRef={sectionRef} /></>}
               desc={t("hub_stat2")}
             />
-            <StatCard
-              title={
-                <>
-                  <Counter to={24} startWhenInViewRef={sectionRef} />
-                  /<span>7</span>
-                </>
-              }
-              desc={t("hub_stat3")}
-            />
+            <StatCard title={<><Counter to={24} startWhenInViewRef={sectionRef} />/<span>7</span></>} desc={t("hub_stat3")} />
           </div>
         </div>
       </Wrap>
@@ -885,8 +814,7 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
         <div
           className="absolute inset-0"
           style={{
-            background:
-              "linear-gradient(180deg, #0b1220 0%, #0e1628 60%, #0b1220 100%)",
+            background: "linear-gradient(180deg, #0b1220 0%, #0e1628 60%, #0b1220 100%)",
           }}
         />
         <div
@@ -901,59 +829,23 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 
       {/* Contenido */}
       <div className="relative mx-auto max-w-7xl px-6 py-28">
-        <RevealBlock
-          kicker={t("uni_k_logistica")}
-          title={t("uni_t_logistica")}
-          lead={t("uni_l_logistica")}
-        >
+        <RevealBlock kicker={t("uni_k_logistica")} title={t("uni_t_logistica")} lead={t("uni_l_logistica")}>
           <div className="grid md:grid-cols-3 gap-6">
-            <InfoCard
-              index={0}
-              title={t("uni_card_hub")}
-              desc={t("uni_card_hub_d")}
-            />
-            <InfoCard
-              index={1}
-              title={t("uni_card_route")}
-              desc={t("uni_card_route_d")}
-            />
-            <InfoCard
-              index={2}
-              title={t("uni_card_comp")}
-              desc={t("uni_card_comp_d")}
-            />
+            <InfoCard index={0} title={t("uni_card_hub")} desc={t("uni_card_hub_d")} />
+            <InfoCard index={1} title={t("uni_card_route")} desc={t("uni_card_route_d")} />
+            <InfoCard index={2} title={t("uni_card_comp")} desc={t("uni_card_comp_d")} />
           </div>
         </RevealBlock>
 
-        <RevealBlock
-          kicker={t("uni_k_temp")}
-          title={t("uni_t_temp")}
-          lead={t("uni_l_temp")}
-        >
+        <RevealBlock kicker={t("uni_k_temp")} title={t("uni_t_temp")} lead={t("uni_l_temp")}>
           <ul className="grid md:grid-cols-3 gap-6 text-white/90">
-            <MiniCard
-              index={0}
-              big={t("uni_temp_1_big")}
-              small={t("uni_temp_1_small")}
-            />
-            <MiniCard
-              index={1}
-              big={t("uni_temp_2_big")}
-              small={t("uni_temp_2_small")}
-            />
-            <MiniCard
-              index={2}
-              big={t("uni_temp_3_big")}
-              small={t("uni_temp_3_small")}
-            />
+            <MiniCard index={0} big={t("uni_temp_1_big")} small={t("uni_temp_1_small")} />
+            <MiniCard index={1} big={t("uni_temp_2_big")} small={t("uni_temp_2_small")} />
+            <MiniCard index={2} big={t("uni_temp_3_big")} small={t("uni_temp_3_small")} />
           </ul>
         </RevealBlock>
 
-        <RevealBlock
-          kicker={t("uni_k_cov")}
-          title={t("uni_t_cov")}
-          lead={t("uni_l_cov")}
-        >
+        <RevealBlock kicker={t("uni_k_cov")} title={t("uni_t_cov")} lead={t("uni_l_cov")}>
           <div className="grid md:grid-cols-3 gap-6 text-white/90">
             <Badge index={0}>{t("uni_badge_ca")}</Badge>
             <Badge index={1}>{t("uni_badge_sa")}</Badge>
@@ -968,13 +860,7 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 }
 
 /* ========= CARRUSEL INFINITO INLINE + LIGHTBOX ========= */
-function InlineMarquee({
-  images,
-  t,
-}: {
-  images: string[];
-  t: (k: string) => string;
-}) {
+function InlineMarquee({ images, t }: { images: string[]; t: (k: string) => string }) {
   const [open, setOpen] = useState<string | null>(null);
 
   // Duplicamos la lista para loop perfecto
