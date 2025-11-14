@@ -47,6 +47,10 @@ const GALLERY: string[] = [
 type PlaneTheme = "auto" | "light" | "dark";
 type Lang = "es" | "en";
 
+/* ============ MODO MANTENIMIENTO ============ */
+const MAINTENANCE_MODE = true;
+/* ============================================ */
+
 /* =================== i18n básico (ES/EN) =================== */
 const T: Record<Lang, Record<string, string>> = {
   es: {
@@ -403,7 +407,7 @@ const MediferLanding: React.FC = () => {
   const [sending, setSending] = useState(false);
   const [sentOk, setSentOk] = useState<null | boolean>(null);
 
-  // submit del formulario (top-level, NO dentro de otros componentes)
+  // submit del formulario (ya no se usa porque estás con FormSubmit, pero lo dejo por si vuelves a /api/contact)
   async function handleContactSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (sending) return;
@@ -444,6 +448,41 @@ const MediferLanding: React.FC = () => {
     } finally {
       setSending(false);
     }
+  }
+
+  /* ======= MODO MANTENIMIENTO: pantalla simple ======= */
+  if (MAINTENANCE_MODE) {
+    const title =
+      lang === "es"
+        ? "Estamos realizando mantenimiento"
+        : "We are under maintenance";
+    const line1 =
+      lang === "es"
+        ? "Estamos mejorando nuestra plataforma para ofrecerte una mejor experiencia."
+        : "We are improving our platform to offer you a better experience.";
+    const line2 =
+      lang === "es"
+        ? "Vuelve a intentarlo más tarde."
+        : "Please try again later.";
+
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        <div className="text-center px-6 max-w-lg">
+          <img
+            src="/logo-light.png"
+            alt="Medifer Group"
+            className="mx-auto mb-6 h-16 w-auto"
+          />
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">{title}</h1>
+          <p className="text-white/75 mb-2">{line1}</p>
+          <p className="text-white/50 text-sm">{line2}</p>
+
+          <div className="mt-6 flex justify-center">
+            <LangToggle lang={lang} onChange={setLang} compact theme="light" />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -528,7 +567,7 @@ const MediferLanding: React.FC = () => {
           id="hero"
           data-plane="light"
           data-nav="light"
-          className="relative h-screen overflow-hidden flex items-center"
+          className="relative h-screen overflow-hidden flex items:center flex items-center"
           style={{ background: `linear-gradient(135deg, ${C.blue}, ${C.teal})` }}
         >
           {!isMobile && <HeroAmericasMapBG offsetY={28} />}
@@ -597,34 +636,65 @@ const MediferLanding: React.FC = () => {
             </div>
 
             <form
-  className="grid md:grid-cols-2 gap-4 max-w-3xl"
-  action="https://formsubmit.co/bashar@medifergroup.com"
-  method="POST"
->
-  {/* Campos visibles */}
-  <input name="name" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_name')} required />
-  <input name="company" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_company')} />
-  <input name="email" type="email" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_email')} required />
-  <input name="phone" className="px-4 py-3 rounded-xl bg-slate-100" placeholder={t('f_phone')} />
-  <textarea name="message" className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100" rows={5} placeholder={t('f_msg')} required />
+              className="grid md:grid-cols-2 gap-4 max-w-3xl"
+              action="https://formsubmit.co/bashar@medifergroup.com"
+              method="POST"
+            >
+              {/* Campos visibles */}
+              <input
+                name="name"
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_name")}
+                required
+              />
+              <input
+                name="company"
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_company")}
+              />
+              <input
+                name="email"
+                type="email"
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_email")}
+                required
+              />
+              <input
+                name="phone"
+                className="px-4 py-3 rounded-xl bg-slate-100"
+                placeholder={t("f_phone")}
+              />
+              <textarea
+                name="message"
+                className="md:col-span-2 px-4 py-3 rounded-xl bg-slate-100"
+                rows={5}
+                placeholder={t("f_msg")}
+                required
+              />
 
-  {/* Ajustes FormSubmit */}
-  <input type="hidden" name="_subject" value="Nuevo contacto desde Medifer Landing" />
-  <input type="hidden" name="_template" value="table" />
-  <input type="hidden" name="_captcha" value="false" />
-  {/* URL a la que quieres redirigir tras enviar */}
-  <input type="hidden" name="_next" value="https://medifer-landing.vercel.app/?sent=1" />
-  {/* Honeypot anti-bots */}
-  <input type="text" name="_honey" className="hidden" />
+              {/* Ajustes FormSubmit */}
+              <input
+                type="hidden"
+                name="_subject"
+                value="Nuevo contacto desde Medifer Landing"
+              />
+              <input type="hidden" name="_template" value="table" />
+              <input type="hidden" name="_captcha" value="false" />
+              <input
+                type="hidden"
+                name="_next"
+                value="https://medifer-landing.vercel.app/?sent=1"
+              />
+              <input type="text" name="_honey" className="hidden" />
 
-  <button
-    type="submit"
-    className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white"
-    style={{ background: C.blue }}
-  >
-    {t('f_send')}
-  </button>
-</form>
+              <button
+                type="submit"
+                className="md:col-span-2 rounded-xl px-5 py-3 font-semibold text-white"
+                style={{ background: C.blue }}
+              >
+                {t("f_send")}
+              </button>
+            </form>
           </Wrap>
         </section>
       </main>
@@ -635,7 +705,10 @@ const MediferLanding: React.FC = () => {
 export default MediferLanding;
 
 /* =================== Helpers =================== */
-function Wrap({ className = "", children }: PropsWithChildren<{ className?: string }>): JSX.Element {
+function Wrap({
+  className = "",
+  children,
+}: PropsWithChildren<{ className?: string }>): JSX.Element {
   return <div className={`mx-auto max-w-7xl px-6 ${className}`}>{children}</div>;
 }
 const Feature: React.FC<{ title: string; desc: string }> = ({ title, desc }) => (
@@ -666,21 +739,31 @@ function LangToggle({
 
   return (
     <div
-      className={`flex items-center rounded-full border ${compact ? "px-1 py-1" : "px-1.5 py-1.5"} ${containerClass}`}
+      className={`flex items-center rounded-full border ${
+        compact ? "px-1 py-1" : "px-1.5 py-1.5"
+      } ${containerClass}`}
       role="group"
       aria-label="Language switch"
-      style={{ boxShadow: isLight ? "0 0 0 1px rgba(255,255,255,.05) inset" : "0 0 0 1px rgba(0,0,0,.03) inset" }}
+      style={{
+        boxShadow: isLight
+          ? "0 0 0 1px rgba(255,255,255,.05) inset"
+          : "0 0 0 1px rgba(0,0,0,.03) inset",
+      }}
     >
       <button
         onClick={() => onChange("es")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "es" ? activeClass : idleClass}`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
+          lang === "es" ? activeClass : idleClass
+        }`}
         aria-pressed={lang === "es"}
       >
         ES
       </button>
       <button
         onClick={() => onChange("en")}
-        className={`px-2 rounded-full text-sm font-semibold transition-colors ${lang === "en" ? activeClass : idleClass}`}
+        className={`px-2 rounded-full text-sm font-semibold transition-colors ${
+          lang === "en" ? activeClass : idleClass
+        }`}
         aria-pressed={lang === "en"}
       >
         EN
@@ -750,8 +833,12 @@ function HubPanamaSection({
             poster={poster}
             key={(video?.webm || "") + (video?.mp4 || "")}
           >
-            {video?.webm && supports.webm && <source src={video.webm} type="video/webm" />}
-            {video?.mp4 && supports.mp4 && <source src={video.mp4} type="video/mp4" />}
+            {video?.webm && supports.webm && (
+              <source src={video.webm} type="video/webm" />
+            )}
+            {video?.mp4 && supports.mp4 && (
+              <source src={video.mp4} type="video/mp4" />
+            )}
           </video>
         ) : (
           <img
@@ -772,16 +859,42 @@ function HubPanamaSection({
         </div>
 
         <div className="max-w-3xl">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">{t("hub_title")}</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold mb-4">
+            {t("hub_title")}
+          </h2>
           <p className="text-white/90 mb-8">{t("hub_lead")}</p>
 
           <div className="grid md:grid-cols-3 gap-4">
-            <StatCard title={<><Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} /></>} desc={t("hub_stat1")} />
             <StatCard
-              title={<><Counter to={96} startWhenInViewRef={sectionRef} /> – <Counter to={120} suffix=" h" startWhenInViewRef={sectionRef} /></>}
+              title={
+                <>
+                  <Counter to={72} suffix=" h" startWhenInViewRef={sectionRef} />
+                </>
+              }
+              desc={t("hub_stat1")}
+            />
+            <StatCard
+              title={
+                <>
+                  <Counter to={96} startWhenInViewRef={sectionRef} /> –{" "}
+                  <Counter
+                    to={120}
+                    suffix=" h"
+                    startWhenInViewRef={sectionRef}
+                  />
+                </>
+              }
               desc={t("hub_stat2")}
             />
-            <StatCard title={<><Counter to={24} startWhenInViewRef={sectionRef} />/<span>7</span></>} desc={t("hub_stat3")} />
+            <StatCard
+              title={
+                <>
+                  <Counter to={24} startWhenInViewRef={sectionRef} />
+                  /<span>7</span>
+                </>
+              }
+              desc={t("hub_stat3")}
+            />
           </div>
         </div>
       </Wrap>
@@ -812,7 +925,8 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
         <div
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(180deg, #0b1220 0%, #0e1628 60%, #0b1220 100%)",
+            background:
+              "linear-gradient(180deg, #0b1220 0%, #0e1628 60%, #0b1220 100%)",
           }}
         />
         <div
@@ -827,23 +941,59 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 
       {/* Contenido */}
       <div className="relative mx-auto max-w-7xl px-6 py-28">
-        <RevealBlock kicker={t("uni_k_logistica")} title={t("uni_t_logistica")} lead={t("uni_l_logistica")}>
+        <RevealBlock
+          kicker={t("uni_k_logistica")}
+          title={t("uni_t_logistica")}
+          lead={t("uni_l_logistica")}
+        >
           <div className="grid md:grid-cols-3 gap-6">
-            <InfoCard index={0} title={t("uni_card_hub")} desc={t("uni_card_hub_d")} />
-            <InfoCard index={1} title={t("uni_card_route")} desc={t("uni_card_route_d")} />
-            <InfoCard index={2} title={t("uni_card_comp")} desc={t("uni_card_comp_d")} />
+            <InfoCard
+              index={0}
+              title={t("uni_card_hub")}
+              desc={t("uni_card_hub_d")}
+            />
+            <InfoCard
+              index={1}
+              title={t("uni_card_route")}
+              desc={t("uni_card_route_d")}
+            />
+            <InfoCard
+              index={2}
+              title={t("uni_card_comp")}
+              desc={t("uni_card_comp_d")}
+            />
           </div>
         </RevealBlock>
 
-        <RevealBlock kicker={t("uni_k_temp")} title={t("uni_t_temp")} lead={t("uni_l_temp")}>
+        <RevealBlock
+          kicker={t("uni_k_temp")}
+          title={t("uni_t_temp")}
+          lead={t("uni_l_temp")}
+        >
           <ul className="grid md:grid-cols-3 gap-6 text-white/90">
-            <MiniCard index={0} big={t("uni_temp_1_big")} small={t("uni_temp_1_small")} />
-            <MiniCard index={1} big={t("uni_temp_2_big")} small={t("uni_temp_2_small")} />
-            <MiniCard index={2} big={t("uni_temp_3_big")} small={t("uni_temp_3_small")} />
+            <MiniCard
+              index={0}
+              big={t("uni_temp_1_big")}
+              small={t("uni_temp_1_small")}
+            />
+            <MiniCard
+              index={1}
+              big={t("uni_temp_2_big")}
+              small={t("uni_temp_2_small")}
+            />
+            <MiniCard
+              index={2}
+              big={t("uni_temp_3_big")}
+              small={t("uni_temp_3_small")}
+            />
           </ul>
         </RevealBlock>
 
-        <RevealBlock kicker={t("uni_k_cov")} title={t("uni_t_cov")} lead={t("uni_l_cov")}>
+        <RevealBlock
+          kicker={t("uni_k_cov")}
+          title={t("uni_t_cov")}
+          lead={t("uni_l_cov")}
+        >
           <div className="grid md:grid-cols-3 gap-6 text-white/90">
             <Badge index={0}>{t("uni_badge_ca")}</Badge>
             <Badge index={1}>{t("uni_badge_sa")}</Badge>
@@ -858,7 +1008,13 @@ function UnifiedInfoSection({ t }: { t: (k: string) => string }) {
 }
 
 /* ========= CARRUSEL INFINITO INLINE + LIGHTBOX ========= */
-function InlineMarquee({ images, t }: { images: string[]; t: (k: string) => string }) {
+function InlineMarquee({
+  images,
+  t,
+}: {
+  images: string[];
+  t: (k: string) => string;
+}) {
   const [open, setOpen] = useState<string | null>(null);
 
   // Duplicamos la lista para loop perfecto
@@ -871,12 +1027,11 @@ function InlineMarquee({ images, t }: { images: string[]; t: (k: string) => stri
     <div className="mt-12">
       <div className="relative overflow-hidden">
         {/* fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#0b1220] to-transparent opacity-70" />
+        <div className="pointer-events-none.absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[#0b1220] to-transparent opacity-70" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-[#0b1220] to-transparent opacity-70" />
 
         <motion.div
           className="flex gap-4 md:gap-6"
-          // Recorre media pista (-50%) para mostrar TODAS las imágenes y repetir sin salto
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: DURATION, ease: "linear", repeat: Infinity }}
         >
