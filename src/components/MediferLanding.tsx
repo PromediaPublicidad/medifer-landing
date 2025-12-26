@@ -48,7 +48,7 @@ type PlaneTheme = "auto" | "light" | "dark";
 type Lang = "es" | "en";
 
 /* ============ MODO MANTENIMIENTO ============ */
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 /* ============================================ */
 
 /* =================== i18n básico (ES/EN) =================== */
