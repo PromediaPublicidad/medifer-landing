@@ -27,6 +27,7 @@ const copy = {
 } as const;
 
 const LOADING_ASSETS = ["/logo-dark.png", "/gallery/02.webp"];
+const MIN_LOADING_MS = 4000;
 
 function PageLoader({ exiting }: { exiting: boolean }) {
   return (
@@ -64,6 +65,8 @@ export default function MediferLanding() {
   useEffect(() => { localStorage.setItem("medifer.lang", lang); document.documentElement.lang = lang; }, [lang]);
   useEffect(() => {
     let active = true;
+    let finishScheduled = false;
+    const startedAt = performance.now();
     const loadImage = (src: string) => new Promise<void>((resolve) => {
       const image = new Image();
       image.onload = () => resolve();
@@ -71,12 +74,17 @@ export default function MediferLanding() {
       image.src = src;
     });
     const finish = () => {
-      if (!active) return;
-      setLoaderState("exiting");
-      window.setTimeout(() => active && setLoaderState("done"), 520);
+      if (!active || finishScheduled) return;
+      finishScheduled = true;
+      const remaining = Math.max(0, MIN_LOADING_MS - (performance.now() - startedAt));
+      window.setTimeout(() => {
+        if (!active) return;
+        setLoaderState("exiting");
+        window.setTimeout(() => active && setLoaderState("done"), 520);
+      }, remaining);
     };
     Promise.all(LOADING_ASSETS.map(loadImage)).then(finish);
-    const safety = window.setTimeout(finish, 1800);
+    const safety = window.setTimeout(finish, MIN_LOADING_MS + 1000);
     return () => { active = false; window.clearTimeout(safety); };
   }, []);
   const navigate = (id: string) => scrollToSection(id, () => setMenuOpen(false));
