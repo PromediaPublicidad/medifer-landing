@@ -26,6 +26,19 @@ const copy = {
   },
 } as const;
 
+const LOADING_ASSETS = ["/logo-dark.png", "/gallery/02.webp"];
+
+function PageLoader({ exiting }: { exiting: boolean }) {
+  return (
+    <div className={`page-loader${exiting ? " is-exiting" : ""}`} role="status" aria-live="polite" aria-label="Cargando MEDIFER Group">
+      <div className="page-loader-inner">
+        <img src="/logo-dark.png" alt="MEDIFER Group" />
+        <span className="page-loader-line" aria-hidden="true"><i /></span>
+      </div>
+    </div>
+  );
+}
+
 function scrollToSection(id: string, onNavigate: () => void) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   onNavigate();
@@ -46,11 +59,30 @@ export default function MediferLanding() {
     return saved === "en" ? "en" : "es";
   });
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loaderState, setLoaderState] = useState<"loading" | "exiting" | "done">("loading");
   const t = copy[lang];
   useEffect(() => { localStorage.setItem("medifer.lang", lang); document.documentElement.lang = lang; }, [lang]);
+  useEffect(() => {
+    let active = true;
+    const loadImage = (src: string) => new Promise<void>((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve();
+      image.onerror = () => resolve();
+      image.src = src;
+    });
+    const finish = () => {
+      if (!active) return;
+      setLoaderState("exiting");
+      window.setTimeout(() => active && setLoaderState("done"), 520);
+    };
+    Promise.all(LOADING_ASSETS.map(loadImage)).then(finish);
+    const safety = window.setTimeout(finish, 1800);
+    return () => { active = false; window.clearTimeout(safety); };
+  }, []);
   const navigate = (id: string) => scrollToSection(id, () => setMenuOpen(false));
 
-  return <div className="site-shell">
+  return <div className="site-shell" aria-busy={loaderState !== "done"}>
+    {loaderState !== "done" && <PageLoader exiting={loaderState === "exiting"} />}
     <header className="site-header"><div className="header-inner">
       <button className="brand-button" onClick={() => navigate("inicio")} aria-label="MEDIFER Group"><img src="/logo-dark.png" alt="MEDIFER Group" /></button>
       <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? t.closeMenu : t.openMenu} onClick={() => setMenuOpen((open) => !open)}><span /><span /></button>
@@ -62,13 +94,13 @@ export default function MediferLanding() {
 
     <main>
       <section id="inicio" className="hero-section" aria-labelledby="hero-title"><div className="section-wrap hero-grid">
-        <div className="hero-copy reveal"><p className="eyebrow">MEDIFER GROUP</p><h1 id="hero-title">{t.heroTitle}</h1><p className="hero-lead">{t.heroText}</p><button className="primary-cta" onClick={() => navigate("medifer")}>{t.heroCta}<span aria-hidden="true">↗</span></button></div>
+        <div className="hero-copy reveal"><p className="eyebrow">MEDIFER GROUP</p><h1 id="hero-title">{t.heroTitle}</h1><p className="hero-lead">{t.heroText}</p><button className="primary-cta" onClick={() => navigate("medifer")}>{t.heroCta}</button></div>
         <figure className="hero-image reveal"><img src="/gallery/02.webp" alt={lang === "es" ? "Entorno profesional del sector salud" : "Professional healthcare environment"} fetchPriority="high" /><figcaption>Healthcare / Latin America</figcaption></figure>
       </div></section>
       <section id="propuesta" className="proposal-section" aria-labelledby="proposal-title"><div className="section-wrap narrow-copy reveal"><p className="eyebrow">01 / {t.navProposal}</p><h2 id="proposal-title">{t.proposalTitle}</h2><p>{t.proposalText}</p></div></section>
       <section id="medifer" className="medifer-section" aria-labelledby="medifer-title"><div className="section-wrap"><div className="section-heading reveal"><p className="eyebrow">02 / MEDIFER</p><h2 id="medifer-title">{t.mediferTitle}</h2><p>{t.mediferText}</p></div><div className="capabilities" role="list">{t.capabilities.map((capability, index) => <div className="capability reveal" role="listitem" key={capability}><CapabilityIcon index={index} /><span>{capability}</span></div>)}</div></div></section>
       <section id="presencia" className="presence-section" aria-labelledby="presence-title"><div className="section-wrap presence-layout"><div className="presence-copy reveal"><p className="eyebrow">03 / {t.navPresence}</p><h2 id="presence-title">{t.presenceTitle}</h2><p>{t.presenceText}</p><div className="country-list" aria-label={t.regionalLabel}><div className="country-item country-primary"><span className="country-dot" /><span>Panamá</span><small>{t.panama}</small></div><div className="country-item"><span className="country-dot" /><span>Venezuela</span><small>{t.venezuela}</small></div><div className="country-item"><span className="country-dot" /><span>Ecuador</span><small>{t.ecuador}</small></div></div></div><RegionalMap labels={{ panama: t.panama, venezuela: t.venezuela, ecuador: t.ecuador }} /></div></section>
-      <section id="contacto" className="contact-section" aria-labelledby="contact-title"><div className="section-wrap contact-inner reveal"><p className="eyebrow">04 / {t.navContact}</p><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactText}</p><a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}<span aria-hidden="true">↗</span></a></div></section>
+      <section id="contacto" className="contact-section" aria-labelledby="contact-title"><div className="section-wrap contact-inner reveal"><p className="eyebrow">04 / {t.navContact}</p><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactText}</p><a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></section>
     </main>
     <footer className="site-footer"><div className="section-wrap footer-inner"><img src="/logo-dark.png" alt="MEDIFER Group" /><p>{t.footer} <a href="#inicio">{GROUP_PARENT_NAME}</a>.</p><span>© {new Date().getFullYear()} MEDIFER Group</span></div></footer>
   </div>;
