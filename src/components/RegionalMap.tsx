@@ -2,32 +2,35 @@ import { geoMercator, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
 
-type MapLabels = { panama: string; venezuela: string; ecuador: string };
 const WIDTH = 720;
 const HEIGHT = 470;
 const projection = geoMercator().center([-73, -11]).scale(560).translate([WIDTH / 2, HEIGHT / 2 + 20]);
 const path = geoPath(projection);
 const atlas = worldAtlas as unknown as { objects: { countries: unknown } };
 const countries = feature(worldAtlas as never, atlas.objects.countries as never) as unknown as { features: Array<{ id?: string | number; geometry: unknown }> };
-const highlightedCountries = new Set(["218", "591", "862"]);
-const markerData = [
-  { key: "panama", coordinates: [-80.1, 8.5] as [number, number], box: { x: 48, y: 72, w: 176 }, primary: true },
-  { key: "venezuela", coordinates: [-66.2, 7.1] as [number, number], box: { x: 496, y: 116, w: 176 }, primary: false },
-  { key: "ecuador", coordinates: [-78.4, -1.4] as [number, number], box: { x: 360, y: 292, w: 160 }, primary: false },
-] as const;
+const PANAMA: [number, number] = [-80.1, 8.5];
+const DESTINATIONS: Array<[number, number]> = [[-100, 26], [-91, 16], [-70, 17], [-61, 7], [-54, -15], [-70, -31]];
 
-export default function RegionalMap({ labels }: { labels: MapLabels }) {
-  const textByKey = { panama: ["Panamá", labels.panama], venezuela: ["Venezuela", labels.venezuela], ecuador: ["Ecuador", labels.ecuador] } as const;
-  return <div className="regional-map" aria-label="Panamá, Venezuela y Ecuador">
-    <div className="map-heading"><span>LATINOAMÉRICA</span><small>Presencia actual</small></div>
+function routePath(from: [number, number], to: [number, number], bend: number) {
+  const control: [number, number] = [from[0] + (to[0] - from[0]) * 0.52, from[1] + (to[1] - from[1]) * bend];
+  const start = projection(from) ?? [0, 0];
+  const end = projection(to) ?? [0, 0];
+  const middle = projection(control) ?? [0, 0];
+  return `M ${start[0]} ${start[1]} Q ${middle[0]} ${middle[1]} ${end[0]} ${end[1]}`;
+}
+
+export default function RegionalMap({ label }: { label: string }) {
+  const panamaPoint = projection(PANAMA) ?? [0, 0];
+  return <div className="regional-map" aria-label="Panamá como hub marítimo, aéreo y terrestre">
+    <div className="map-heading"><span>LATINOAMÉRICA</span><small>Conexiones desde Panamá</small></div>
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-labelledby="map-title map-description">
-      <title id="map-title">Presencia regional de MEDIFER</title>
-      <desc id="map-description">Mapa geográfico de Latinoamérica con Panamá como sede regional y presencia en Venezuela y Ecuador.</desc>
-      <g className="map-countries">{countries.features.map((country, index) => { const id = String(country.id ?? ""); const d = path(country as never); return d ? <path key={`${id}-${index}`} d={d} className={highlightedCountries.has(id) ? "map-country is-highlighted" : "map-country"} /> : null; })}</g>
-      {markerData.map((marker) => { const point = projection(marker.coordinates) ?? [0, 0]; const [label, status] = textByKey[marker.key]; const lineEndX = marker.box.x > point[0] ? marker.box.x : marker.box.x + marker.box.w; const lineEndY = marker.box.y + 28; return <g className={`map-connector ${marker.primary ? "is-primary" : ""}`} key={marker.key}>
-        <path d={`M ${point[0]} ${point[1]} L ${lineEndX} ${lineEndY}`} /><rect x={marker.box.x} y={marker.box.y} width={marker.box.w} height="57" rx="7" /><circle cx={marker.box.x + 16} cy={marker.box.y + 18} r={marker.primary ? 8 : 6} /><text x={marker.box.x + 34} y={marker.box.y + 22}>{label}</text><text className="map-label" x={marker.box.x + 34} y={marker.box.y + 41}>{status}</text><circle className="map-marker-ring" cx={point[0]} cy={point[1]} r={marker.primary ? 15 : 10} /><circle className="map-marker-core" cx={point[0]} cy={point[1]} r={marker.primary ? 5 : 4} />
-      </g>; })}
+      <title id="map-title">Panamá, hub regional de MEDIFER</title>
+      <desc id="map-description">Mapa geográfico de Latinoamérica con Panamá como hub marítimo, aéreo y terrestre y conexiones hacia distintos mercados.</desc>
+      <defs><marker id="route-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" /></marker></defs>
+      <g className="map-countries">{countries.features.map((country, index) => { const d = path(country as never); return d ? <path key={`${country.id ?? "country"}-${index}`} d={d} className="map-country" /> : null; })}</g>
+      <g className="map-routes" aria-hidden="true">{DESTINATIONS.map((destination, index) => <g key={`${destination.join("-")}`}><path className="map-route" d={routePath(PANAMA, destination, index % 2 === 0 ? 18 : -18)} /><circle className="route-endpoint" cx={(projection(destination) ?? [0, 0])[0]} cy={(projection(destination) ?? [0, 0])[1]} r="3.5" /></g>)}</g>
+      <g className="map-hub"><path className="hub-leader" d={`M ${panamaPoint[0]} ${panamaPoint[1]} L 205 112`} /><rect x="38" y="82" width="167" height="62" rx="7" /><circle className="hub-badge" cx="55" cy="103" r="9" /><text x="75" y="107">Panamá</text><text className="map-label" x="75" y="127">{label}</text><circle className="hub-ring" cx={panamaPoint[0]} cy={panamaPoint[1]} r="17" /><circle className="hub-core" cx={panamaPoint[0]} cy={panamaPoint[1]} r="6" /></g>
     </svg>
-    <div className="map-key"><span><i className="key-dot key-dot-main" />Sede regional</span><span><i className="key-dot" />Presencia regional</span></div>
+    <div className="map-key"><span><i className="key-dot key-dot-main" />Panamá</span><span><i className="key-route" />Conexiones regionales</span></div>
   </div>;
 }

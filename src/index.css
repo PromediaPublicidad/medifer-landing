@@ -9,6 +9,11 @@ html{zoom:90%}
 .eyebrow{font-size:15px;line-height:1.2;letter-spacing:.13em;font-weight:800;color:#1b8c95;margin-bottom:24px}
 @media(max-width:760px){.eyebrow{font-size:14px;margin-bottom:20px}}
 
+/* Brighter MEDIFER aqua, with a deeper interaction tone for readable white text. */
+:root{--cyan:#00cbd8;--cyan-deep:#007f89}
+.primary-cta,.primary-nav .nav-contact{background:var(--cyan-deep)}.primary-cta:hover,.primary-nav .nav-contact:hover{background:#006b74}.contact-link{color:var(--cyan-deep)}.contact-link:hover{color:#006b74}
+.map-countries{fill:#e8f1f2;stroke:#c8d8db;stroke-width:.8}.map-country{fill:#e8f1f2;stroke:#c8d8db;stroke-width:.8}.map-route{fill:none;stroke:var(--cyan);stroke-width:2.1;stroke-linecap:round;stroke-dasharray:7 8;marker-end:url(#route-arrow);opacity:.9}.map-route+ .route-endpoint,.route-endpoint{fill:var(--cyan);stroke:#fff;stroke-width:1.5}.hub-leader{fill:none;stroke:var(--cyan-deep);stroke-width:1.5;stroke-linecap:round}.map-hub rect{fill:#fff;stroke:#a7d9dd;stroke-width:1.2}.map-hub text{fill:var(--ink);font-size:16px;font-weight:800}.map-hub .map-label{fill:#4f656b;font-size:12px;font-weight:700}.map-hub .hub-badge{fill:var(--cyan-deep)}.map-hub .hub-ring{fill:var(--cyan);stroke:#fff;stroke-width:2}.map-hub .hub-core{fill:#fff}.map-hub .hub-badge,.map-hub .hub-ring,.map-hub .hub-core{stroke-linejoin:round}.map-key{color:#4f656b;font-weight:700}.key-route{display:inline-block;width:20px;border-top:2px dashed var(--cyan);margin-right:2px}
+
 .page-loader{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#fff;opacity:1;visibility:visible;transition:opacity .48s ease,visibility .48s ease}.page-loader.is-exiting{opacity:0;visibility:hidden;pointer-events:none}.page-loader-inner{display:flex;flex-direction:column;align-items:center;gap:30px}.page-loader-inner img{width:clamp(170px,18vw,235px);height:auto}.page-loader-line{display:block;width:116px;height:2px;overflow:hidden;background:#dcebed;border-radius:99px}.page-loader-line i{display:block;width:42%;height:100%;background:var(--cyan);border-radius:inherit;animation:loader-slide 1.05s ease-in-out infinite}@keyframes loader-slide{0%{transform:translateX(-115%)}50%{transform:translateX(125%)}100%{transform:translateX(245%)}}@media(prefers-reduced-motion:reduce){.page-loader,.page-loader-line i{transition:none;animation:none}.page-loader-line i{width:100%}}
 
 /* Regional locator: labels stay outside the silhouette so the three markets remain legible. */
@@ -20,3 +25,19 @@ html{zoom:90%}
 .map-countries{fill:#e8f1f2;stroke:#c8d8db;stroke-width:.8}.map-country{fill:#e8f1f2;stroke:#c8d8db;stroke-width:.8}.map-country.is-highlighted{fill:#d4ecee;stroke:#9fc9cd;stroke-width:1.1}.map-connector text{fill:#28343a;font-size:16px;font-weight:800}.map-connector .map-label{fill:#596a70;font-size:12px;font-weight:700}.map-connector rect{fill:#fff;stroke:#b9d0d3;stroke-width:1.2}.map-connector path{stroke:#83aeb2;stroke-width:1.5}.map-connector circle{fill:#239fa8}.map-connector.is-primary circle{fill:#18868e}.map-key{font-size:12px;color:#596a70}.map-key span{font-weight:700}
 @media(max-width:1024px){.map-connector text{font-size:15px}.map-connector .map-label{font-size:11px}}
 @media(max-width:760px){.map-connector text{font-size:16px}.map-connector .map-label{font-size:12px}.map-key{font-size:12px}}
+
+/* Hero cover: the Panama skyline establishes the opening message without competing with it. */
+.hero-cover{position:relative;isolation:isolate;overflow:hidden;min-height:clamp(620px,calc(100svh - 18px),900px);padding:140px 0 100px;display:flex;align-items:center;background:#153b49}
+.hero-image-bg{position:absolute;inset:0;z-index:-1;margin:0;transform-origin:center center;will-change:transform,opacity}
+.hero-image-bg img{width:100%;height:100%;object-fit:cover;object-position:center 58%}
+.hero-image-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(9,37,49,.34) 0%,rgba(9,37,49,.24) 36%,rgba(9,37,49,.77) 100%),linear-gradient(90deg,rgba(4,29,41,.64) 0%,rgba(4,29,41,.2) 62%,rgba(4,29,41,.32) 100%)}
+.hero-content{position:relative;z-index:1;display:flex;justify-content:center;will-change:transform,opacity}
+.hero-copy-centered{width:min(100%,980px);text-align:center}
+.hero-copy-centered .eyebrow{color:#c8fbfd;text-shadow:0 1px 16px rgba(3,29,39,.3)}
+.hero-copy-centered h1{max-width:980px;margin:0 auto 28px;color:#fff;font-size:clamp(48px,6.5vw,92px);line-height:.99;letter-spacing:-.055em;text-wrap:balance;text-shadow:0 3px 26px rgba(3,29,39,.32)}
+.hero-copy-centered .hero-lead{max-width:700px;margin:0 auto 36px;color:rgba(255,255,255,.94);font-size:clamp(18px,1.5vw,21px);line-height:1.55;text-shadow:0 2px 14px rgba(3,29,39,.28)}
+.hero-copy-centered .primary-cta{background:var(--cyan);box-shadow:0 12px 30px rgba(0,44,54,.24)}
+.hero-copy-centered .primary-cta:hover{background:#00aebc}
+@media(max-width:1024px){.hero-cover{min-height:clamp(650px,calc(100svh - 18px),820px);padding:140px 0 86px}.hero-copy-centered{width:min(100%,760px)}.hero-copy-centered h1{font-size:clamp(48px,7vw,72px)}}
+@media(max-width:760px){.hero-cover{min-height:clamp(650px,calc(100svh - 12px),820px);padding:124px 0 72px}.hero-image-bg img{object-position:58% center}.hero-image-overlay{background:linear-gradient(180deg,rgba(9,37,49,.4) 0%,rgba(9,37,49,.24) 35%,rgba(9,37,49,.84) 100%),linear-gradient(90deg,rgba(4,29,41,.48),rgba(4,29,41,.24))}.hero-copy-centered h1{font-size:clamp(40px,10vw,56px);line-height:1.01;margin-bottom:24px}.hero-copy-centered .hero-lead{font-size:17px;line-height:1.55;margin-bottom:30px}.hero-copy-centered .primary-cta{min-height:54px}}
+@media(max-width:390px){.hero-cover{padding-top:116px}.hero-copy-centered h1{font-size:clamp(37px,10.5vw,46px)}}
