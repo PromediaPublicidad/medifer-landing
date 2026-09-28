@@ -26,14 +26,14 @@ const copy = {
   },
 } as const;
 
-const LOADING_ASSETS = ["/logo-dark.png", "/hero-city.webp"];
+const LOADING_ASSETS = ["/logo-blue.png", "/hero-city.webp"];
 const MIN_LOADING_MS = 4000;
 
 function PageLoader({ exiting }: { exiting: boolean }) {
   return (
     <div className={`page-loader${exiting ? " is-exiting" : ""}`} role="status" aria-live="polite" aria-label="Cargando MEDIFER Group">
       <div className="page-loader-inner">
-        <img src="/logo-dark.png" alt="MEDIFER Group" />
+        <img src="/logo-blue.png" alt="MEDIFER Group" />
         <span className="page-loader-line" aria-hidden="true"><i /></span>
       </div>
     </div>
@@ -111,7 +111,7 @@ export default function MediferLanding() {
   return <div className="site-shell" aria-busy={loaderState !== "done"}>
     {loaderState !== "done" && <PageLoader exiting={loaderState === "exiting"} />}
     <header className="site-header"><div className="header-inner">
-      <button className="brand-button" onClick={() => navigate("inicio")} aria-label="MEDIFER Group"><img src="/logo-dark.png" alt="MEDIFER Group" /></button>
+      <button className="brand-button" onClick={() => navigate("inicio")} aria-label="MEDIFER Group"><img src="/logo-blue.png" alt="MEDIFER Group" /></button>
       <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={menuOpen ? t.closeMenu : t.openMenu} onClick={() => setMenuOpen((open) => !open)}><span /><span /></button>
       <nav id="primary-navigation" className={`primary-nav${menuOpen ? " is-open" : ""}`} aria-label="Primary navigation">
         <button onClick={() => navigate("propuesta")}>{t.navProposal}</button><button onClick={() => navigate("medifer")}>{t.navMedifer}</button><button onClick={() => navigate("presencia")}>{t.navPresence}</button><button className="nav-contact" onClick={() => navigate("contacto")}>{t.navContact}</button>
@@ -134,6 +134,6 @@ export default function MediferLanding() {
       <section id="presencia" className="presence-section" aria-labelledby="presence-title"><div className="section-wrap presence-layout"><div className="presence-copy reveal"><p className="eyebrow">03 / {t.navPresence}</p><h2 id="presence-title">{t.presenceTitle}</h2><p>{t.presenceText}</p><div className="country-list" aria-label={t.regionalLabel}><div className="country-item country-primary"><span className="country-dot" /><span>Panamá</span><small>{t.panama}</small></div></div></div><RegionalMap label={t.panama} /></div></section>
       <section id="contacto" className="contact-section" aria-labelledby="contact-title"><div className="section-wrap contact-inner reveal"><p className="eyebrow">04 / {t.navContact}</p><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactText}</p><a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></section>
     </main>
-    <footer className="site-footer"><div className="section-wrap footer-inner"><img src="/logo-dark.png" alt="MEDIFER Group" /><p>{t.footer} <a href="#inicio">{GROUP_PARENT_NAME}</a>.</p><span>© {new Date().getFullYear()} MEDIFER Group</span></div></footer>
+    <footer className="site-footer"><div className="section-wrap footer-inner"><img src="/logo-blue.png" alt="MEDIFER Group" /><p>{t.footer} <a href="#inicio">{GROUP_PARENT_NAME}</a>.</p><span>© {new Date().getFullYear()} MEDIFER Group</span></div></footer>
   </div>;
 }

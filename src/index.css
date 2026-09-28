@@ -41,3 +41,16 @@ html{zoom:90%}
 @media(max-width:1024px){.hero-cover{min-height:clamp(650px,calc(100svh - 18px),820px);padding:140px 0 86px}.hero-copy-centered{width:min(100%,760px)}.hero-copy-centered h1{font-size:clamp(48px,7vw,72px)}}
 @media(max-width:760px){.hero-cover{min-height:clamp(650px,calc(100svh - 12px),820px);padding:124px 0 72px}.hero-image-bg img{object-position:58% center}.hero-image-overlay{background:linear-gradient(180deg,rgba(9,37,49,.4) 0%,rgba(9,37,49,.24) 35%,rgba(9,37,49,.84) 100%),linear-gradient(90deg,rgba(4,29,41,.48),rgba(4,29,41,.24))}.hero-copy-centered h1{font-size:clamp(40px,10vw,56px);line-height:1.01;margin-bottom:24px}.hero-copy-centered .hero-lead{font-size:17px;line-height:1.55;margin-bottom:30px}.hero-copy-centered .primary-cta{min-height:54px}}
 @media(max-width:390px){.hero-cover{padding-top:116px}.hero-copy-centered h1{font-size:clamp(37px,10.5vw,46px)}}
+
+/* Brand book palette: blue is the primary MEDIFER signal, with turquoise as support. */
+:root{--brand-blue:#0574bb;--brand-teal:#009fa5;--cyan:#0574bb;--cyan-deep:#0574bb}
+button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
+.eyebrow{color:var(--brand-blue)}
+.primary-cta,.primary-nav .nav-contact{background:var(--brand-blue)}
+.primary-cta:hover,.primary-nav .nav-contact:hover{background:#045f9b}
+.contact-link{color:var(--brand-blue);border-bottom-color:rgba(5,116,187,.38)}.contact-link:hover{color:#045f9b}
+.capability-icon{stroke:var(--brand-blue)}
+.country-dot,.key-dot{background:var(--brand-blue)}.country-primary .country-dot{box-shadow:0 0 0 5px rgba(5,116,187,.14)}
+.map-route{stroke:var(--brand-blue)}.route-endpoint{fill:var(--brand-blue)}.hub-leader{stroke:var(--brand-blue)}.map-hub rect{stroke:#9fc9e2}.map-hub .hub-badge{fill:var(--brand-blue)}.map-hub .hub-ring{fill:var(--brand-blue)}.map-connector circle,.map-marker{fill:var(--brand-blue)}.map-connector.is-primary circle{fill:#045f9b}.key-route{border-top-color:var(--brand-blue)}
+.page-loader-line i{background:var(--brand-blue)}
+.hero-copy-centered .primary-cta{background:var(--brand-blue)}.hero-copy-centered .primary-cta:hover{background:#045f9b}
