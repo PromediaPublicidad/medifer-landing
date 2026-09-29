@@ -47,11 +47,38 @@ function scrollToSection(id: string, onNavigate: () => void) {
 
 function CapabilityIcon({ index }: { index: number }) {
   const paths = [
-    <><circle cx="12" cy="12" r="7" /><path d="M12 5v14M5 12h14" /></>,
-    <><path d="M12 3 19 6v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z" /><path d="m9 12 2 2 4-4" /></>,
-    <><path d="M4 19V9M12 19V5M20 19v-7" /><path d="M2 19h20" /></>,
+    <>
+      <path className="capability-blob" d="M31 42c11-23 45-30 72-21 28 9 42 34 35 59-7 25-35 46-64 42-29-4-54-32-53-55 0-9 5-17 10-25Z" />
+      <g className="capability-art">
+        <circle cx="80" cy="78" r="34" />
+        <path d="M46 78h68M80 44c-11 10-16 21-16 34s5 24 16 34M80 44c11 10 16 21 16 34s-5 24-16 34" />
+        <path className="capability-accent" d="M56 59c7-5 15-8 24-8 9 0 17 3 24 8M56 97c7 5 15 8 24 8 9 0 17-3 24-8" />
+        <circle className="capability-accent-fill" cx="120" cy="57" r="8" />
+        <path className="capability-accent" d="m115 57 4 4 8-9" />
+      </g>
+    </>,
+    <>
+      <path className="capability-blob" d="M34 34c18-19 55-20 77-3 22 17 25 51 10 75-15 24-48 34-74 22-26-12-39-46-28-69 4-10 9-18 15-25Z" />
+      <g className="capability-art">
+        <rect x="49" y="47" width="62" height="78" rx="7" />
+        <path d="M67 47v-8c0-5 4-8 9-8h8c5 0 9 3 9 8v8M73 47v-7h14v7M64 67h31M64 80h24M64 93h17" />
+        <path className="capability-accent" d="m64 107 8 8 15-17" />
+        <path className="capability-accent" d="M104 67h13M104 80h7" />
+      </g>
+    </>,
+    <>
+      <path className="capability-blob" d="M27 65c4-27 32-48 60-48 28 0 53 21 57 48 4 27-14 55-40 66-27 11-61 1-73-23-7-13-6-28-4-43Z" />
+      <g className="capability-art">
+        <path d="M45 117V61M45 117h72" />
+        <rect x="57" y="84" width="13" height="33" rx="2" />
+        <rect x="78" y="67" width="13" height="50" rx="2" />
+        <rect x="99" y="51" width="13" height="66" rx="2" />
+        <path className="capability-accent" d="m53 75 20-16 17 8 28-29" />
+        <path className="capability-accent" d="M108 38h10v10" />
+      </g>
+    </>,
   ];
-  return <svg className="capability-icon" viewBox="0 0 24 24" aria-hidden="true">{paths[index]}</svg>;
+  return <svg className={`capability-icon capability-icon-${index}`} viewBox="0 0 160 160" aria-hidden="true">{paths[index]}</svg>;
 }
 
 export default function MediferLanding() {
@@ -106,6 +133,23 @@ export default function MediferLanding() {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
+  useEffect(() => {
+    const items = Array.from(document.querySelectorAll<HTMLElement>(".capability-reveal"));
+    if (!items.length) return;
+    if (!("IntersectionObserver" in window)) {
+      items.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
   const navigate = (id: string) => scrollToSection(id, () => setMenuOpen(false));
 
   return <div className="site-shell" aria-busy={loaderState !== "done"}>
@@ -130,7 +174,7 @@ export default function MediferLanding() {
         </div>
       </section>
       <section id="propuesta" className="proposal-section" aria-labelledby="proposal-title"><div className="section-wrap narrow-copy reveal"><p className="eyebrow">01 / {t.navProposal}</p><h2 id="proposal-title">{t.proposalTitle}</h2><p>{t.proposalText}</p></div></section>
-      <section id="medifer" className="medifer-section" aria-labelledby="medifer-title"><div className="section-wrap"><div className="section-heading reveal"><p className="eyebrow">02 / MEDIFER</p><h2 id="medifer-title">{t.mediferTitle}</h2><p>{t.mediferText}</p></div><div className="capabilities" role="list">{t.capabilities.map((capability, index) => <div className="capability reveal" role="listitem" key={capability}><CapabilityIcon index={index} /><span>{capability}</span></div>)}</div></div></section>
+      <section id="medifer" className="medifer-section" aria-labelledby="medifer-title"><div className="section-wrap"><div className="section-heading reveal"><p className="eyebrow">02 / MEDIFER</p><h2 id="medifer-title">{t.mediferTitle}</h2><p>{t.mediferText}</p></div><div className="capabilities" role="list">{t.capabilities.map((capability, index) => <div className={`capability capability-reveal capability-${index}`} role="listitem" key={capability}><CapabilityIcon index={index} /><span>{capability}</span></div>)}</div></div></section>
       <section id="presencia" className="presence-section" aria-labelledby="presence-title"><div className="section-wrap presence-layout"><div className="presence-copy reveal"><p className="eyebrow">03 / {t.navPresence}</p><h2 id="presence-title">{t.presenceTitle}</h2><p>{t.presenceText}</p><div className="country-list" aria-label={t.regionalLabel}><div className="country-item country-primary"><span className="country-dot" /><span>Panamá</span><small>{t.panama}</small></div></div></div><RegionalMap label={t.panama} /></div></section>
       <section id="contacto" className="contact-section" aria-labelledby="contact-title"><div className="section-wrap contact-inner reveal"><p className="eyebrow">04 / {t.navContact}</p><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactText}</p><a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></section>
     </main>

@@ -54,3 +54,22 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 .map-route{stroke:var(--brand-blue)}.route-endpoint{fill:var(--brand-blue)}.hub-leader{stroke:var(--brand-blue)}.map-hub rect{stroke:#9fc9e2}.map-hub .hub-badge{fill:var(--brand-blue)}.map-hub .hub-ring{fill:var(--brand-blue)}.map-connector circle,.map-marker{fill:var(--brand-blue)}.map-connector.is-primary circle{fill:#045f9b}.key-route{border-top-color:var(--brand-blue)}
 .page-loader-line i{background:var(--brand-blue)}
 .hero-copy-centered .primary-cta{background:var(--brand-blue)}.hero-copy-centered .primary-cta:hover{background:#045f9b}
+
+/* Section 2 capability illustrations: soft organic backgrounds with a lightweight editorial line style. */
+.capabilities{border-top:0;gap:clamp(28px,5vw,84px);align-items:start}
+.capability,.capability+.capability{min-height:0;padding:0;border:0;align-items:center;text-align:center;gap:22px}
+.capability-icon{width:min(100%,190px);height:auto;overflow:visible;fill:none;stroke:var(--brand-blue);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.capability-blob{fill:#eef0f1;stroke:none}
+.capability-art{fill:none;stroke:var(--brand-blue);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.capability-accent{stroke:var(--brand-teal)}
+.capability-accent-fill{fill:var(--brand-teal);stroke:none}
+.capability>span{max-width:220px;font-size:18px;line-height:1.25;color:var(--brand-blue);font-weight:800}
+@media(max-width:1024px){.capabilities{gap:24px}.capability-icon{width:min(100%,168px)}.capability>span{font-size:17px}}
+@media(max-width:760px){.capabilities{display:grid;grid-template-columns:1fr;gap:54px;margin-top:48px}.capability,.capability+.capability{min-height:0;padding:0}.capability-icon{width:min(100%,190px)}.capability>span{font-size:18px}}
+
+.capability-reveal{opacity:0;transform:translateX(-64px)}
+.capability-reveal.is-visible{animation:capability-slide-in .78s cubic-bezier(.22,.8,.3,1) forwards}
+.capability-0.is-visible{animation-delay:0ms}.capability-1.is-visible{animation-delay:110ms}.capability-2.is-visible{animation-delay:220ms}
+@keyframes capability-slide-in{from{opacity:0;transform:translateX(-64px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.capability-reveal,.capability-reveal.is-visible{opacity:1;transform:none;animation:none}}
+
