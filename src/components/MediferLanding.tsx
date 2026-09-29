@@ -3,26 +3,26 @@ import RegionalMap from "./RegionalMap";
 
 type Lang = "es" | "en";
 const CONTACT_EMAIL = "contacto@medifergroup.com";
-const GROUP_PARENT_NAME = "YGroup";
+const GROUP_PARENT_NAME = "YYY Group";
 
 const copy = {
   es: {
     navProposal: "Nuestra propuesta", navMedifer: "Medifer", navPresence: "Presencia regional", navContact: "Contacto",
-    heroTitle: "Desde Latinoamérica, llevamos salud a nuevos mercados",
-    heroText: "Medifer Group representa marcas internacionales del sector salud e impulsa su desarrollo y expansión en Latinoamérica.", heroCta: "Conoce Medifer",
+    heroTitle: "Desarrollamos tu marca en Latinoamerica, adaptando la estrategia a cada mercado",
+    heroText: "Medifer Group representa marcas internacionales del sector salud, impulsando su desarrollo y expansión en latinoamericana", heroCta: "Conoce Medifer",
     proposalTitle: "La identidad de tu marca, adaptada a cada mercado.", proposalText: "Latinoamérica reúne mercados diferentes. Respetamos la identidad y los estándares de cada marca al adaptar su desarrollo en cada país.",
     mediferTitle: "Medifer Group", mediferText: "Integramos conocimiento de mercado, gestión regulatoria y desarrollo comercial bajo un modelo de Master Distributor.", capabilities: ["Conocimiento de mercado", "Gestión regulatoria", "Desarrollo comercial"],
     presenceTitle: "Panamá, nuestro hub regional", presenceText: "Su ubicación geográfica, el Canal de Panamá y su conectividad aérea hacen de nuestra sede un hub estratégico que facilita el enlace con los distintos mercados de Latinoamérica.", regionalLabel: "Conectividad de Panamá", panama: "Hub marítimo, aéreo y terrestre",
-    contactTitle: "Contacto", contactText: "Para conocer más sobre Medifer Group, escríbenos.", footer: "Medifer Group forma parte de", openMenu: "Abrir menú", closeMenu: "Cerrar menú",
+    contactTitle: "Contacto", contactText: "Para conocer más sobre Medifer Group, escríbenos.", footer: "Medifer Group S.A., forma parte de", openMenu: "Abrir menú", closeMenu: "Cerrar menú",
   },
   en: {
     navProposal: "Our proposal", navMedifer: "Medifer", navPresence: "Regional presence", navContact: "Contact",
-    heroTitle: "From Latin America, we bring healthcare to new markets",
-    heroText: "Medifer Group represents international healthcare brands and drives their development and expansion across Latin America.", heroCta: "Discover Medifer",
+    heroTitle: "We develop your brand in Latin America, adapting the strategy to each market",
+    heroText: "Medifer Group represents international healthcare brands, driving their development and expansion across Latin America.", heroCta: "Discover Medifer",
     proposalTitle: "Your brand identity, adapted to each market.", proposalText: "Latin America brings together different markets. We respect each brand’s identity and standards when adapting its development in every country.",
     mediferTitle: "Medifer Group", mediferText: "We integrate market knowledge, regulatory management and commercial development under a Master Distributor model.", capabilities: ["Market knowledge", "Regulatory management", "Commercial development"],
     presenceTitle: "Panama, our regional hub", presenceText: "Its geographic location, the Panama Canal and its air connectivity make our headquarters a strategic hub that facilitates connections with the different markets in Latin America.", regionalLabel: "Panama connectivity", panama: "Maritime, air and land hub",
-    contactTitle: "Contact", contactText: "To learn more about Medifer Group, write to us.", footer: "Medifer Group is part of", openMenu: "Open menu", closeMenu: "Close menu",
+    contactTitle: "Contact", contactText: "To learn more about Medifer Group, write to us.", footer: "Medifer Group S.A. is part of", openMenu: "Open menu", closeMenu: "Close menu",
   },
 } as const;
 
@@ -170,7 +170,7 @@ export default function MediferLanding() {
           <span className="hero-image-overlay" aria-hidden="true" />
         </figure>
         <div className="section-wrap hero-content" style={{ opacity: 1 - heroProgress, transform: `translateY(${heroProgress * -34}px)` }}>
-          <div className="hero-copy hero-copy-centered reveal"><p className="eyebrow">MEDIFER GROUP</p><h1 id="hero-title">{t.heroTitle}</h1><p className="hero-lead">{t.heroText}</p></div>
+          <div className="hero-copy hero-copy-centered reveal"><h1 id="hero-title">{t.heroTitle}</h1><p className="hero-lead">{t.heroText}</p></div>
         </div>
       </section>
       <section id="propuesta" className="proposal-section" aria-labelledby="proposal-title"><div className="section-wrap narrow-copy reveal"><p className="eyebrow">01 / {t.navProposal}</p><h2 id="proposal-title">{t.proposalTitle}</h2><p>{t.proposalText}</p></div></section>
