@@ -8,21 +8,21 @@ const GROUP_PARENT_NAME = "YYY Group";
 const copy = {
   es: {
     navProposal: "Nuestra propuesta", navMedifer: "Medifer", navPresence: "Presencia regional", navContact: "Contacto",
-    heroTitle: "Desarrollamos tu marca en Latinoamerica, adaptando la estrategia a cada mercado",
-    heroText: "Medifer Group representa marcas internacionales del sector salud, impulsando su desarrollo y expansión en latinoamericana", heroCta: "Conoce Medifer",
-    proposalTitle: "La identidad de tu marca, adaptada a cada mercado.", proposalText: "Latinoamérica reúne mercados diferentes. Respetamos la identidad y los estándares de cada marca al adaptar su desarrollo en cada país.",
-    mediferTitle: "Medifer Group", mediferText: "Integramos conocimiento de mercado, gestión regulatoria y desarrollo comercial bajo un modelo de Master Distributor.", capabilities: ["Conocimiento de mercado", "Gestión regulatoria", "Desarrollo comercial"],
-    presenceTitle: "Panamá, nuestro hub regional", presenceText: "Su ubicación geográfica, el Canal de Panamá y su conectividad aérea hacen de nuestra sede un hub estratégico que facilita el enlace con los distintos mercados de Latinoamérica.", regionalLabel: "Conectividad de Panamá", panama: "Hub marítimo, aéreo y terrestre",
-    contactTitle: "Contacto", contactText: "Para conocer más sobre Medifer Group, escríbenos.", footer: "Medifer Group S.A., forma parte de", openMenu: "Abrir menú", closeMenu: "Cerrar menú",
+    heroTitle: "Desarrollamos su marca en Latinoamerica, adaptando la estrategia a cada mercado",
+    heroText: "MEDIFER Group representa marcas internacionales del sector salud e impulsa su desarrollo y expansión en Latinoamérica.", heroCta: "Conoce Medifer",
+    proposalTitle: "La identidad de las marcas, adaptada a cada mercado.", proposalText: "MEDIFER entiende las particularidades de cada país y preserva la identidad y los estándares de su marca en toda la región.",
+    mediferTitle: "MEDIFER Group", mediferText: "Como Master Distributor, MEDIFER Group integra experiencia regulatoria y ejecución comercial bajo un único modelo regional.", capabilities: ["Conocimiento de mercado", "Gestión regulatoria", "Desarrollo comercial"],
+    presenceTitle: "Panamá, nuestra sede regional", presenceText: "Desde Panamá coordinamos el desarrollo de las marcas que representamos en Latinoamérica. Su ubicación estratégica, el Canal de Panamá y su conectividad aérea fortalecen nuestra presencia regional.", regionalLabel: "Presencia regional de Panamá", panama: "Hub marítimo, aéreo y terrestre",
+    contactTitle: "Contacto", contactText: "Para conversar sobre oportunidades de negocio en Latinoamérica, contacte a nuestro equipo.", footer: "MEDIFER Group forma parte de", openMenu: "Abrir menú", closeMenu: "Cerrar menú",
   },
   en: {
-    navProposal: "Our proposal", navMedifer: "Medifer", navPresence: "Regional presence", navContact: "Contact",
-    heroTitle: "We develop your brand in Latin America, adapting the strategy to each market",
-    heroText: "Medifer Group represents international healthcare brands, driving their development and expansion across Latin America.", heroCta: "Discover Medifer",
-    proposalTitle: "Your brand identity, adapted to each market.", proposalText: "Latin America brings together different markets. We respect each brand’s identity and standards when adapting its development in every country.",
-    mediferTitle: "Medifer Group", mediferText: "We integrate market knowledge, regulatory management and commercial development under a Master Distributor model.", capabilities: ["Market knowledge", "Regulatory management", "Commercial development"],
-    presenceTitle: "Panama, our regional hub", presenceText: "Its geographic location, the Panama Canal and its air connectivity make our headquarters a strategic hub that facilitates connections with the different markets in Latin America.", regionalLabel: "Panama connectivity", panama: "Maritime, air and land hub",
-    contactTitle: "Contact", contactText: "To learn more about Medifer Group, write to us.", footer: "Medifer Group S.A. is part of", openMenu: "Open menu", closeMenu: "Close menu",
+    navProposal: "Our Proposition", navMedifer: "MEDIFER", navPresence: "Regional Presence", navContact: "Contact",
+    heroTitle: "We develop your brand across Latin America with a strategy for each market.",
+    heroText: "MEDIFER Group represents international pharmaceutical and healthcare brands, supporting their expansion across the region.", heroCta: "Discover MEDIFER",
+    proposalTitle: "Latin America is not a single market.", proposalText: "MEDIFER addresses the differences between countries while preserving your brand identity and standards throughout the region.",
+    mediferTitle: "MEDIFER Group", mediferText: "As a master distributor, MEDIFER Group brings regulatory expertise and commercial execution together under a single regional model.", capabilities: ["Market knowledge", "Regulatory management", "Commercial development"],
+    presenceTitle: "Panama, our regional hub", presenceText: "From Panama, we coordinate the development of the brands we represent across Latin America. The country’s strategic location, the Panama Canal and its air connectivity strengthen our regional presence.", regionalLabel: "Panama regional presence", panama: "Maritime, air and land hub",
+    contactTitle: "Get in touch", contactText: "To discuss business opportunities in Latin America, contact our team.", footer: "MEDIFER Group is part of", openMenu: "Open menu", closeMenu: "Close menu",
   },
 } as const;
 
@@ -178,6 +178,6 @@ export default function MediferLanding() {
       <section id="presencia" className="presence-section" aria-labelledby="presence-title"><div className="section-wrap presence-layout"><div className="presence-copy reveal"><p className="eyebrow">03 / {t.navPresence}</p><h2 id="presence-title">{t.presenceTitle}</h2><p>{t.presenceText}</p><div className="country-list" aria-label={t.regionalLabel}><div className="country-item country-primary"><span className="country-dot" /><span>Panamá</span><small>{t.panama}</small></div></div></div><RegionalMap /></div></section>
       <section id="contacto" className="contact-section" aria-labelledby="contact-title"><div className="section-wrap contact-inner reveal"><p className="eyebrow">04 / {t.navContact}</p><h2 id="contact-title">{t.contactTitle}</h2><p>{t.contactText}</p><a className="contact-link" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a></div></section>
     </main>
-    <footer className="site-footer"><div className="section-wrap footer-inner"><img src="/logo-blue.png" alt="MEDIFER Group" /><p>{t.footer} <a href="#inicio">{GROUP_PARENT_NAME}</a>.</p><span>© {new Date().getFullYear()} MEDIFER Group</span></div></footer>
+    <footer className="site-footer"><div className="section-wrap footer-inner"><img src="/logo-blue.png" alt="MEDIFER Group" /><p>{t.footer} <a href="https://www.yyygroup.net/" target="_blank" rel="noreferrer">{GROUP_PARENT_NAME}</a>.</p><span>© {new Date().getFullYear()} MEDIFER Group</span></div></footer>
   </div>;
 }

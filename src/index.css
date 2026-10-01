@@ -34,12 +34,12 @@ html{zoom:90%}
 .hero-content{position:relative;z-index:1;display:flex;justify-content:center;will-change:transform,opacity}
 .hero-copy-centered{width:min(100%,980px);text-align:center}
 .hero-copy-centered .eyebrow{color:#c8fbfd;text-shadow:0 1px 16px rgba(3,29,39,.3)}
-.hero-copy-centered h1{max-width:980px;margin:0 auto 28px;color:#fff;font-size:clamp(48px,6.5vw,92px);line-height:.99;letter-spacing:-.055em;text-wrap:balance;text-shadow:0 3px 26px rgba(3,29,39,.32)}
+.hero-copy-centered h1{max-width:980px;margin:0 auto 28px;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:clamp(48px,6.5vw,92px);font-weight:400;line-height:.99;letter-spacing:-.052em;text-wrap:balance;text-shadow:0 3px 26px rgba(3,29,39,.32)}
 .hero-copy-centered .hero-lead{max-width:700px;margin:0 auto 36px;color:rgba(255,255,255,.94);font-size:clamp(18px,1.5vw,21px);line-height:1.55;text-shadow:0 2px 14px rgba(3,29,39,.28)}
 .hero-copy-centered .primary-cta{background:var(--cyan);box-shadow:0 12px 30px rgba(0,44,54,.24)}
 .hero-copy-centered .primary-cta:hover{background:#00aebc}
 @media(max-width:1024px){.hero-cover{min-height:clamp(650px,calc(100svh - 18px),820px);padding:140px 0 86px}.hero-copy-centered{width:min(100%,760px)}.hero-copy-centered h1{font-size:clamp(48px,7vw,72px)}}
-@media(max-width:760px){.hero-cover{min-height:clamp(650px,calc(100svh - 12px),820px);padding:124px 0 72px}.hero-image-bg img{object-position:58% center}.hero-image-overlay{background:linear-gradient(180deg,rgba(9,37,49,.4) 0%,rgba(9,37,49,.24) 35%,rgba(9,37,49,.84) 100%),linear-gradient(90deg,rgba(4,29,41,.48),rgba(4,29,41,.24))}.hero-copy-centered h1{max-width:360px;margin-inline:auto;font-size:clamp(34px,9vw,38px);line-height:1.04;letter-spacing:-.045em;margin-bottom:24px}.hero-copy-centered .hero-lead{max-width:340px;font-size:16px;line-height:1.55;margin-bottom:30px}.hero-copy-centered .primary-cta{min-height:54px}}
+@media(max-width:760px){.hero-cover{min-height:clamp(650px,calc(100svh - 12px),820px);padding:124px 0 72px}.hero-image-bg img{object-position:58% center}.hero-image-overlay{background:linear-gradient(180deg,rgba(9,37,49,.4) 0%,rgba(9,37,49,.24) 35%,rgba(9,37,49,.84) 100%),linear-gradient(90deg,rgba(4,29,41,.48),rgba(4,29,41,.24))}.hero-copy-centered h1{max-width:360px;margin-inline:auto;font-size:clamp(34px,9vw,38px);font-weight:400;line-height:1.04;letter-spacing:-.04em;margin-bottom:24px}.hero-copy-centered .hero-lead{max-width:340px;font-size:16px;line-height:1.55;margin-bottom:30px}.hero-copy-centered .primary-cta{min-height:54px}}
 @media(max-width:390px){.hero-cover{padding-top:116px}.hero-copy-centered h1{max-width:320px;font-size:clamp(32px,8.8vw,36px)}}
 
 /* Brand book palette: blue is the primary MEDIFER signal, with turquoise as support. */
@@ -76,6 +76,8 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 /* Regional map: opportunity routes, without logistics-style arrowheads. */
 .map-heading{justify-content:flex-end}
 .map-route{stroke-width:1.5;stroke-dasharray:5 8;marker-end:none;vector-effect:non-scaling-stroke}
+.map-route-europe{stroke-width:1.35}
+.map-routes-europe marker path{fill:var(--brand-blue);stroke:none}
 .map-route-reveal{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:butt;stroke-dasharray:1 1;stroke-dashoffset:0;vector-effect:non-scaling-stroke}
 .hub-title{fill:var(--brand-blue);font-size:16px;font-weight:800;letter-spacing:-.02em}
 
