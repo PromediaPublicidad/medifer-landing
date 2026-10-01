@@ -97,8 +97,7 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 @media (max-width:760px){.hub-title{font-size:11px}}
 
 /* Static light-map treatment: the glow replaces internal country borders. */
-.map-country{fill:#e8f7f8;stroke:none}
-.map-country-europe{fill:#d9f1f4}
+.map-country{fill:#b7d9e5;stroke:none}
 .map-route-glow{fill:none;stroke:#b9f4fa;stroke-width:5;stroke-linecap:round;opacity:.82;filter:url(#route-glow)}
 .map-route{stroke:#8fe8f1;stroke-width:1.5;stroke-dasharray:none;stroke-linecap:round;marker-end:none;animation:none}
 .route-endpoint-glow{fill:#aaf4fa;opacity:.9;filter:url(#route-glow)}
@@ -106,3 +105,12 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 .map-hub .hub-glow{fill:#aaf4fa;opacity:.95;filter:url(#hub-glow)}
 .map-hub .hub-ring{fill:var(--brand-blue);stroke:#fff;stroke-width:2}
 .map-hub .hub-core{fill:#fff}
+
+/* Keep the entire Atlantic window within its section at every viewport. */
+.presence-section{overflow:hidden}
+.presence-layout{width:min(1400px,calc(100% - 64px));grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px}
+.regional-map{overflow:hidden}
+.regional-map svg{display:block;width:100%;height:auto;min-height:0;overflow:hidden;aspect-ratio:720/500}
+.map-hub .hub-title{font-size:18px}
+@media(max-width:1024px){.presence-layout{grid-template-columns:1fr;gap:40px}.regional-map{max-width:850px;margin-inline:auto}}
+@media(max-width:760px){.presence-layout{width:calc(100% - 32px)}.map-hub .hub-title{font-size:22px}}

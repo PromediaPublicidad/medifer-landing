@@ -1,20 +1,21 @@
-import { geoArea, geoCentroid, geoMercator, geoPath } from "d3-geo";
-import { feature } from "topojson-client";
+import { geoEquirectangular, geoPath } from "d3-geo";
+import { merge } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
 
 const WIDTH = 720;
-const HEIGHT = 470;
-const projection = geoMercator().center([-38, 5]).scale(310).translate([WIDTH / 2, HEIGHT / 2]);
+const HEIGHT = 500;
+// Fixed Atlantic window: 125°W–40°E and 58°N–56°S.
+// The northern archipelago is cropped, not filtered by country size.
+const projection = geoEquirectangular()
+  .center([-42.5, 1])
+  .scale(240)
+  .translate([WIDTH / 2, HEIGHT / 2])
+  .clipExtent([[14.4, 11.2], [705.6, 488.8]]);
 const path = geoPath(projection);
-const atlas = worldAtlas as unknown as { objects: { countries: unknown } };
-const countries = feature(worldAtlas as never, atlas.objects.countries as never) as unknown as { features: Array<{ id?: string | number; geometry: unknown }> };
-const regionalCountries = countries.features.filter((country) => {
-  const [longitude, latitude] = geoCentroid(country as never);
-  const isAmericas = longitude > -125 && longitude < -30 && latitude > -60 && latitude < 65;
-  const isWesternEurope = longitude >= -30 && longitude < 20 && latitude > 35 && latitude < 72;
-  const isCaribbeanIslandBelt = longitude > -90 && longitude < -55 && latitude > 16;
-  return (isAmericas || isWesternEurope) && !isCaribbeanIslandBelt && geoArea(country as never) > 0.001;
-});
+const atlas = worldAtlas as unknown as Parameters<typeof merge>[0];
+// Merge shared borders so continents remain solid, including small countries.
+const countryGeometry = atlas.objects.countries as { geometries: Extract<Parameters<typeof merge>[1], unknown[]> };
+const landPath = path(merge(atlas, countryGeometry.geometries)) ?? "";
 const PANAMA: [number, number] = [-80.1, 8.5];
 const DESTINATIONS: Array<[number, number]> = [
   [-102, 23], // México
@@ -51,7 +52,7 @@ export default function RegionalMap() {
         <filter id="route-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" /></filter>
         <filter id="hub-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8" /></filter>
       </defs>
-      <g className="map-countries">{regionalCountries.map((country, index) => { const d = path(country as never); const [longitude, latitude] = geoCentroid(country as never); const isEurope = longitude >= -30 && longitude < 20 && latitude > 35 && latitude < 72; return d ? <path key={`${country.id ?? "country"}-${index}`} d={d} className={`map-country${isEurope ? " map-country-europe" : ""}`} /> : null; })}</g>
+      <path className="map-country" d={landPath} />
       <g className="map-routes" aria-hidden="true">{DESTINATIONS.map((destination, index) => {
         const d = routePath(PANAMA, destination, index % 2 === 0 ? 1 : -1);
         const endpoint = projection(destination) ?? [0, 0];
