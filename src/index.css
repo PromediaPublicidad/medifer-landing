@@ -79,8 +79,8 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 .hub-title{fill:var(--brand-blue);font-size:16px;font-weight:800;letter-spacing:-.02em}
 
 @media (prefers-reduced-motion: no-preference){
-  .map-route{animation:map-dash-flow 18s linear infinite}
-  @keyframes map-dash-flow{to{stroke-dashoffset:-26}}
+  .map-route{animation:map-dash-flow 4.5s linear infinite}
+  @keyframes map-dash-flow{from{stroke-dashoffset:0}to{stroke-dashoffset:-26}}
 }
 
 @media (max-width:1024px){.hub-title{font-size:14px}}
