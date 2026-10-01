@@ -73,3 +73,15 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 @keyframes capability-slide-in{from{opacity:0;transform:translateX(-64px)}to{opacity:1;transform:translateX(0)}}
 @media(prefers-reduced-motion:reduce){.capability-reveal,.capability-reveal.is-visible{opacity:1;transform:none;animation:none}}
 
+/* Regional map: opportunity routes, without logistics-style arrowheads. */
+.map-heading{justify-content:flex-end}
+.map-route{stroke-width:1.5;stroke-dasharray:5 8;marker-end:none}
+.hub-title{fill:var(--brand-blue);font-size:16px;font-weight:800;letter-spacing:-.02em}
+
+@media (prefers-reduced-motion: no-preference){
+  .map-route{animation:map-dash-flow 18s linear infinite}
+  @keyframes map-dash-flow{to{stroke-dashoffset:-26}}
+}
+
+@media (max-width:1024px){.hub-title{font-size:14px}}
+@media (max-width:760px){.hub-title{font-size:11px}}
