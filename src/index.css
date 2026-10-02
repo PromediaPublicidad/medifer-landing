@@ -114,3 +114,4 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 .map-hub .hub-title{font-size:18px}
 @media(max-width:1024px){.presence-layout{grid-template-columns:1fr;gap:40px;padding-right:clamp(32px,8vw,80px)}.regional-map{max-width:1000px;margin-inline:auto}}
 @media(max-width:760px){.presence-layout{width:calc(100% - 32px);padding-inline:0}.map-hub .hub-title{font-size:22px}}
+@media(max-width:760px){.regional-map .map-stage{mask:none}.regional-map svg{overflow:visible}}
