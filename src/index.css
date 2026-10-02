@@ -109,8 +109,8 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 /* Keep the entire Atlantic window within its section at every viewport. */
 .presence-section{overflow:hidden}
 .presence-layout{width:min(1400px,calc(100% - 64px));grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px}
-.regional-map{overflow:hidden}
-.regional-map svg{display:block;width:100%;height:auto;min-height:0;overflow:hidden;aspect-ratio:720/500}
+.regional-map{overflow:visible;background:transparent}
+.regional-map svg{display:block;width:100%;height:auto;min-height:0;overflow:hidden;aspect-ratio:720/500;background:transparent;-webkit-mask-image:none;mask-image:none}
 .map-hub .hub-title{font-size:18px}
 @media(max-width:1024px){.presence-layout{grid-template-columns:1fr;gap:40px}.regional-map{max-width:850px;margin-inline:auto}}
 @media(max-width:760px){.presence-layout{width:calc(100% - 32px)}.map-hub .hub-title{font-size:22px}}

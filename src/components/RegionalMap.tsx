@@ -51,7 +51,10 @@ export default function RegionalMap() {
       <defs>
         <filter id="route-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4" /></filter>
         <filter id="hub-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="8" /></filter>
+        <radialGradient id="map-fade-gradient" cx="50%" cy="50%" r="68%"><stop offset="0%" stopColor="#fff" /><stop offset="72%" stopColor="#fff" /><stop offset="100%" stopColor="#000" /></radialGradient>
+        <mask id="map-fade-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={WIDTH} height={HEIGHT}><ellipse cx={WIDTH / 2} cy={HEIGHT / 2} rx="355" ry="245" fill="url(#map-fade-gradient)" /></mask>
       </defs>
+      <g mask="url(#map-fade-mask)">
       <path className="map-country" d={landPath} />
       <g className="map-routes" aria-hidden="true">{DESTINATIONS.map((destination, index) => {
         const d = routePath(PANAMA, destination, index % 2 === 0 ? 1 : -1);
@@ -74,6 +77,7 @@ export default function RegionalMap() {
         </g>;
       })}</g>
       <g className="map-hub"><circle className="hub-glow" cx={panamaPoint[0]} cy={panamaPoint[1]} r="30" /><circle className="hub-ring" cx={panamaPoint[0]} cy={panamaPoint[1]} r="18" /><circle className="hub-core" cx={panamaPoint[0]} cy={panamaPoint[1]} r="6" /><text className="hub-title" x={panamaPoint[0] + 27} y={panamaPoint[1] - 13}>Panamá - Hub regional</text></g>
+      </g>
     </svg>
   </div>;
 }
