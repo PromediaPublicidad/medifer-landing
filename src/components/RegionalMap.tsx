@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { geoEquirectangular, geoPath } from "d3-geo";
 import { merge } from "topojson-client";
 import worldAtlas from "world-atlas/countries-110m.json";
@@ -43,6 +44,7 @@ function routePath(from: [number, number], to: [number, number], bend: number) {
 }
 
 export default function RegionalMap() {
+  const maskPrefix = useId().replace(/:/g, "");
   const panamaPoint = projection(PANAMA) ?? [0, 0];
   return <div className="regional-map" aria-label="Panamá como hub marítimo, aéreo y terrestre">
     <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-labelledby="map-title map-description">
@@ -59,20 +61,20 @@ export default function RegionalMap() {
       <g className="map-routes" aria-hidden="true">{DESTINATIONS.map((destination, index) => {
         const d = routePath(PANAMA, destination, index % 2 === 0 ? 1 : -1);
         const endpoint = projection(destination) ?? [0, 0];
+        const maskId = `${maskPrefix}-route-${index}`;
         return <g key={destination.join("-")}>
-          <path className="map-route-glow" d={d} />
-          <path className="map-route" d={d} />
-          <circle className="route-endpoint-glow" cx={endpoint[0]} cy={endpoint[1]} r="9" />
+          <defs><mask id={maskId} maskUnits="userSpaceOnUse" x={-WIDTH} y={-HEIGHT} width={WIDTH * 3} height={HEIGHT * 3}><path className="map-route-reveal" d={d} pathLength="1" /></mask></defs>
+          <path className="map-route" d={d} mask={`url(#${maskId})`} />
           <circle className="route-endpoint" cx={endpoint[0]} cy={endpoint[1]} r="3.5" />
         </g>;
       })}</g>
       <g className="map-routes map-routes-europe" aria-hidden="true">{EUROPE_DESTINATIONS.map((destination, index) => {
         const d = routePath(PANAMA, destination, index === 0 ? -1 : 1);
         const endpoint = projection(destination) ?? [0, 0];
+        const maskId = `${maskPrefix}-europe-route-${index}`;
         return <g key={`europe-${destination.join("-")}`}>
-          <path className="map-route-glow map-route-europe" d={d} />
-          <path className="map-route map-route-europe" d={d} />
-          <circle className="route-endpoint-glow" cx={endpoint[0]} cy={endpoint[1]} r="9" />
+          <defs><mask id={maskId} maskUnits="userSpaceOnUse" x={-WIDTH} y={-HEIGHT} width={WIDTH * 3} height={HEIGHT * 3}><path className="map-route-reveal" d={d} pathLength="1" /></mask></defs>
+          <path className="map-route map-route-europe" d={d} mask={`url(#${maskId})`} />
           <circle className="route-endpoint" cx={endpoint[0]} cy={endpoint[1]} r="3.5" />
         </g>;
       })}</g>

@@ -98,13 +98,25 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 
 /* Static light-map treatment: the glow replaces internal country borders. */
 .map-country{fill:#b7d9e5;stroke:none}
-.map-route-glow{fill:none;stroke:#67d8e2;stroke-width:6;stroke-linecap:round;opacity:.88;filter:url(#route-glow)}
-.map-route{stroke:#0574bb;stroke-width:2;stroke-dasharray:none;stroke-linecap:round;marker-end:none;animation:none}
+.map-route-glow{fill:none;stroke:#67d8e2;stroke-width:6;stroke-linecap:round;stroke-dasharray:5 8;opacity:.88;filter:url(#route-glow)}
+.map-route{stroke:#0574bb;stroke-width:2;stroke-dasharray:5 8;stroke-linecap:round;marker-end:none}
 .route-endpoint-glow{fill:#62d9e5;opacity:.95;filter:url(#route-glow)}
 .route-endpoint{fill:#0574bb;stroke:#fff;stroke-width:1.5}
 .map-hub .hub-glow{fill:#aaf4fa;opacity:.95;filter:url(#hub-glow)}
 .map-hub .hub-ring{fill:var(--brand-blue);stroke:#fff;stroke-width:2}
 .map-hub .hub-core{fill:#fff}
+
+@media(prefers-reduced-motion:no-preference){
+  .map-route,.map-route-glow{animation:map-route-flow 4.5s linear infinite}
+  @keyframes map-route-flow{
+    0%,10%{stroke-dashoffset:0;opacity:0}
+    22%{opacity:1}
+    78%{stroke-dashoffset:-26;opacity:1}
+    100%{stroke-dashoffset:-42;opacity:0}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){.map-route,.map-route-glow{animation:none;opacity:1}}
 
 /* Keep the entire Atlantic window within its section at every viewport. */
 .presence-section{overflow:hidden}
@@ -115,3 +127,17 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 @media(max-width:1024px){.presence-layout{grid-template-columns:1fr;gap:40px;padding-right:clamp(32px,8vw,80px)}.regional-map{max-width:1000px;margin-inline:auto}}
 @media(max-width:760px){.presence-layout{width:calc(100% - 32px);padding-inline:0}.map-hub .hub-title{font-size:22px}}
 @media(max-width:760px){.regional-map .map-stage{mask:none}.regional-map svg{overflow:visible}}
+
+/* Route treatment restored from fb42887: dashed paths reveal from Panama and loop. */
+.map-route{stroke:#0574bb;stroke-width:1.5;stroke-dasharray:5 8;stroke-linecap:round;marker-end:none;animation:none;opacity:.95}
+.map-route-reveal{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:butt;stroke-dasharray:1 1;stroke-dashoffset:0;vector-effect:non-scaling-stroke}
+@media(prefers-reduced-motion:no-preference){
+  .map-route-reveal{animation:map-route-journey 5s linear infinite}
+  @keyframes map-route-journey{
+    0%,8%{stroke-dashoffset:1;opacity:0}
+    9%{stroke-dashoffset:1;opacity:1}
+    65%,78%{stroke-dashoffset:0;opacity:1}
+    92%,100%{stroke-dashoffset:0;opacity:0}
+  }
+}
+@media(prefers-reduced-motion:reduce){.map-route-reveal{animation:none;stroke-dashoffset:0;opacity:1}}
