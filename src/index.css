@@ -98,10 +98,10 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 
 /* Static light-map treatment: the glow replaces internal country borders. */
 .map-country{fill:#b7d9e5;stroke:none}
-.map-route-glow{fill:none;stroke:#b9f4fa;stroke-width:5;stroke-linecap:round;opacity:.82;filter:url(#route-glow)}
-.map-route{stroke:#8fe8f1;stroke-width:1.5;stroke-dasharray:none;stroke-linecap:round;marker-end:none;animation:none}
-.route-endpoint-glow{fill:#aaf4fa;opacity:.9;filter:url(#route-glow)}
-.route-endpoint{fill:#70dbe7;stroke:#fff;stroke-width:1.5}
+.map-route-glow{fill:none;stroke:#67d8e2;stroke-width:6;stroke-linecap:round;opacity:.88;filter:url(#route-glow)}
+.map-route{stroke:#0574bb;stroke-width:2;stroke-dasharray:none;stroke-linecap:round;marker-end:none;animation:none}
+.route-endpoint-glow{fill:#62d9e5;opacity:.95;filter:url(#route-glow)}
+.route-endpoint{fill:#0574bb;stroke:#fff;stroke-width:1.5}
 .map-hub .hub-glow{fill:#aaf4fa;opacity:.95;filter:url(#hub-glow)}
 .map-hub .hub-ring{fill:var(--brand-blue);stroke:#fff;stroke-width:2}
 .map-hub .hub-core{fill:#fff}
