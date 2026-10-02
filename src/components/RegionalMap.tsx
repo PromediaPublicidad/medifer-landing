@@ -56,7 +56,7 @@ export default function RegionalMap() {
         <radialGradient id="map-fade-gradient" cx="50%" cy="50%" r="68%"><stop offset="0%" stopColor="#fff" /><stop offset="72%" stopColor="#fff" /><stop offset="100%" stopColor="#000" /></radialGradient>
         <mask id="map-fade-mask" maskUnits="userSpaceOnUse" x="0" y="0" width={WIDTH} height={HEIGHT}><ellipse cx={WIDTH / 2} cy={HEIGHT / 2} rx="355" ry="245" fill="url(#map-fade-gradient)" /></mask>
       </defs>
-      <g className="map-stage" mask="url(#map-fade-mask)">
+      <g className="map-stage">
       <path className="map-country" d={landPath} />
       <g className="map-routes" aria-hidden="true">{DESTINATIONS.map((destination, index) => {
         const d = routePath(PANAMA, destination, index % 2 === 0 ? 1 : -1);

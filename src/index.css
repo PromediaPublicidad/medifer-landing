@@ -122,6 +122,7 @@ button:focus-visible,a:focus-visible{outline-color:rgba(5,116,187,.38)}
 .presence-section{overflow:hidden}
 .presence-layout{width:100%;max-width:none;padding-left:clamp(32px,8vw,120px);grid-template-columns:minmax(300px,38%) minmax(0,62%);gap:clamp(24px,4vw,64px)}
 .regional-map{overflow:visible;background:transparent;width:100%;margin-right:0}
+.regional-map .map-stage{mask:none}
 .regional-map svg{display:block;width:100%;height:auto;min-height:0;overflow:hidden;aspect-ratio:720/500;background:transparent;-webkit-mask-image:none;mask-image:none}
 .map-hub .hub-title{font-size:18px}
 @media(max-width:1024px){.presence-layout{grid-template-columns:1fr;gap:40px;padding-right:clamp(32px,8vw,80px)}.regional-map{max-width:1000px;margin-inline:auto}}
